@@ -1,0 +1,1 @@
+.box-card{width:100%;height:calc(100vh - 160px)}.box-card .el-card__body{padding:0 20px;width:100%;height:100%;overflow:scroll}.box-card .item{padding:5px 0;width:-webkit-max-content;width:-moz-max-content;width:max-content;min-width:156px;height:26px;line-height:16px;font-size:14px;cursor:pointer}.box-card .item:hover{background-color:#eee}.box-card .item .name{margin-left:5px}
