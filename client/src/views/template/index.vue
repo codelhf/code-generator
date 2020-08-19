@@ -54,12 +54,12 @@
           <span>{{ scope.row.fileType }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('template.table.cteTime')" align="center" width="110">
+      <el-table-column :label="$t('template.table.cteTime')" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.cteTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('template.table.uteTime')" align="center" width="110">
+      <el-table-column :label="$t('template.table.uteTime')" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.uteTime }}</span>
         </template>

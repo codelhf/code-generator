@@ -46,12 +46,12 @@
           <span>{{ scope.row.value }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('templateField.table.cteTime')" align="center" width="110">
+      <el-table-column :label="$t('templateField.table.cteTime')" align="center">
         <template slot-scope="scope">
           <span v-if="scope.row.type === 2">{{ scope.row.cteTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('templateField.table.uteTime')" align="center" width="110">
+      <el-table-column :label="$t('templateField.table.uteTime')" align="center">
         <template slot-scope="scope">
           <span v-if="scope.row.type === 2">{{ scope.row.uteTime }}</span>
         </template>

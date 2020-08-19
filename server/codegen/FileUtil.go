@@ -28,8 +28,14 @@ func GetFuncMap() map[string]interface{} {
 		"now": func() string {
 			return time.Now().Format(time.RFC3339)
 		},
-		"equal": func(str1, str2 string) bool {
-			return strings.EqualFold(str1, str2)
+		"add": func(a, b int) int {
+			return a + b
+		},
+		"sub": func(a, b int) int {
+			return a - b
+		},
+		"size": func(arr []interface{}) int {
+			return len(arr)
 		},
 		"concat": func(strList ...string) string {
 			// 定义一个字节缓冲,快速拼接字符串
