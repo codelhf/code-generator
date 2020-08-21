@@ -31,10 +31,13 @@ func (c *CodeGenerator) Generate(tables []model.ProjectTable) string {
 	if DbUtil.InitConnection(c.config.DataSource) {
 		for i := 0; i < len(tables); i++ {
 			table := tables[i]
-			if util.IsBlank(table.Id) {
+			projectTable := projectTableDao.Select(table.ProjectId, table.TableName)
+			if util.IsBlank(projectTable.Id) {
 				projectTableDao.Insert(table)
 			} else {
-				projectTableDao.Update(table.Id, table)
+				projectTable.DomainName = table.DomainName
+				projectTable.GenerateKey = table.GenerateKey
+				projectTableDao.Update(projectTable.Id, projectTable)
 			}
 			tableName := table.TableName
 			domainName := table.DomainName

@@ -48,7 +48,9 @@ export default {
       tableList: [],
       currentTable: {
         id: '',
+        projectId: '',
         tableName: '',
+        tableType: null,
         domainName: '',
         generateKey: ''
       },
@@ -81,11 +83,25 @@ export default {
         } else {
           this.currentTable = table
         }
+        // this.currentTable.active = !table.active || true
+        // this.tableList.map(item => {
+        //   if (item.tableName === this.currentTable.tableName) {
+        //     item.id = this.currentTable.id
+        //     item.domainName = this.currentTable.domainName
+        //     item.generateKey = this.currentTable.generateKey
+        //     item.active = this.currentTable.active
+        //   }
+        // })
       })
     },
     handleGenerate() {
       if (!this.currentTable.tableName) {
-        this.$message.warning(this.$t('projectGenerate.button.warning'))
+        this.$message.warning(this.$t('projectGenerate.button.tableWarning'))
+        return
+      }
+      const templateList = this.$refs.templateList.list
+      if (templateList.length === 0) {
+        this.$message.warning(this.$t('projectGenerate.button.templateWarning'))
         return
       }
       this.loading = true
@@ -94,11 +110,6 @@ export default {
         setTimeout(() => {
           this.loading = false
           this.generateResult = res.data
-        }, 1.5 * 1000)
-      }, error => {
-        setTimeout(() => {
-          this.loading = false
-          this.generateResult = error
         }, 1.5 * 1000)
       })
     },

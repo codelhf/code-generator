@@ -156,7 +156,8 @@ export default {
       placeholderGenerateKey: '请输入主键'
     },
     button: {
-      warning: '请选择数据表',
+      tableWarning: '请选择数据表',
+      templateWarning: '请添加模板',
       generateCode: '生成代码',
       addTemplate: '添加模板'
     }

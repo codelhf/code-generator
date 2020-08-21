@@ -156,7 +156,8 @@ export default {
       placeholderGenerateKey: 'Please enter the primary key'
     },
     button: {
-      warning: 'Please select data table',
+      tableWarning: 'Please select data table',
+      templateWarning: 'Please add a template',
       generateCode: 'Generate Code',
       addTemplate: 'Add Template'
     }

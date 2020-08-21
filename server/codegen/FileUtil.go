@@ -34,7 +34,7 @@ func GetFuncMap() map[string]interface{} {
 		"sub": func(a, b int) int {
 			return a - b
 		},
-		"size": func(arr []interface{}) int {
+		"size": func(arr []ColumnInfo) int {
 			return len(arr)
 		},
 		"concat": func(strList ...string) string {
