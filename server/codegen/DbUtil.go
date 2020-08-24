@@ -5,6 +5,8 @@ import (
 	"code-generator-go/server/util"
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/lib/pq"
+	//_ "github.com/mattn/go-oci8"
 	"strings"
 )
 
@@ -40,17 +42,20 @@ func (d *DbUtil) GetAllTable() []model.ProjectTable {
 	var sqlStr string
 	var rows *sql.Rows
 	if d.DbType == model.MysqlType {
-		sqlStr = "select table_name, table_type FROM information_schema.`TABLES` WHERE table_schema = ?"
+		sqlStr = "SELECT table_name, table_type FROM information_schema.`TABLES` WHERE table_schema = ?"
 		prepare, err := d.Db.Prepare(sqlStr)
 		checkErr(err)
 		rows, err = prepare.Query(d.DbName)
 	} else if d.DbType == model.OracleType {
-		sqlStr = "select table_name, table_type from user_tab_comments WHERE table_name not like '%$0'"
+		sqlStr = "SELECT table_name, table_type FROM user_tab_comments WHERE table_name NOT LIKE '%$0'"
 		prepare, err := d.Db.Prepare(sqlStr)
 		checkErr(err)
 		rows, err = prepare.Query()
 	} else if d.DbType == model.PostgreSQLType {
-		sqlStr = ""
+		sqlStr = "SELECT * FROM (SELECT tablename AS table_name, 'TABLE' AS table_type FROM pg_tables WHERE schemaname='public' UNION SELECT viewname AS table_name, 'VIEW' AS table_type FROM pg_views WHERE schemaname='public') a ORDER BY TABLE_NAME, table_type"
+		prepare, err := d.Db.Prepare(sqlStr)
+		checkErr(err)
+		rows, err = prepare.Query()
 	}
 	defer rows.Close()
 	var resultList []model.ProjectTable
@@ -74,8 +79,16 @@ func (d *DbUtil) GetTableInfo(tableName string) (columnList []ColumnInfo) {
 	var sqlStr string
 	var rows *sql.Rows
 	if d.DbType == model.MysqlType {
-		sqlStr = "SELECT c.column_name, c.data_type, c.column_key, k.`name` AS keyword, c.column_comment FROM (SELECT column_name, data_type, column_key, column_comment FROM information_schema.columns WHERE table_name = ?) c LEFT JOIN mysql.help_keyword k ON ( c.column_name = k.`name`)"
+		sqlStr = "SELECT table_name FROM information_schema.TABLES WHERE table_schema = 'mysql' and  table_name ='help_keyword';"
 		prepare, err := d.Db.Prepare(sqlStr)
+		checkErr(err)
+		rows, err = prepare.Query()
+		if !rows.Next() {
+			sqlStr = "SELECT c.column_name, c.data_type, c.column_key, '' AS keyword, c.column_comment FROM ( SELECT column_name, data_type, column_key, column_comment FROM information_schema.COLUMNS WHERE table_name = ?) c"
+		} else {
+			sqlStr = "SELECT c.column_name, c.data_type, c.column_key, k.`name` AS keyword, c.column_comment FROM (SELECT column_name, data_type, column_key, column_comment FROM information_schema.columns WHERE table_name = ?) c LEFT JOIN mysql.help_keyword k ON ( c.column_name = k.`name`)"
+		}
+		prepare, err = d.Db.Prepare(sqlStr)
 		checkErr(err)
 		rows, err = prepare.Query(tableName)
 	} else if d.DbType == model.OracleType {

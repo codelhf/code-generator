@@ -18,7 +18,7 @@ const (
 	MysqlType      = 1
 	MysqlName      = "mysql"
 	OracleType     = 2
-	OracleName     = "oracle"
+	OracleName     = "oci8"
 	PostgreSQLType = 3
-	PostgreSQLName = "PostgreSQL"
+	PostgreSQLName = "postgres"
 )

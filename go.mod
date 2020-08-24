@@ -6,6 +6,8 @@ require (
 	github.com/go-sql-driver/mysql v1.4.1
 	github.com/go-xorm/xorm v0.7.9
 	github.com/kr/pretty v0.2.0 // indirect
+	github.com/lib/pq v1.0.0
+	github.com/mattn/go-oci8 v0.0.8
 	github.com/mattn/go-sqlite3 v1.14.0
 	github.com/satori/go.uuid v1.2.0
 	github.com/tealeg/xlsx v1.0.5
