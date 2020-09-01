@@ -6,7 +6,7 @@ import (
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq"
-	//_ "github.com/mattn/go-oci8"
+	_ "github.com/mattn/go-oci8"
 	"strings"
 )
 
@@ -42,20 +42,23 @@ func (d *DbUtil) GetAllTable() []model.ProjectTable {
 	var sqlStr string
 	var rows *sql.Rows
 	if d.DbType == model.MysqlType {
-		sqlStr = "SELECT table_name, table_type FROM information_schema.`TABLES` WHERE table_schema = ?"
+		sqlStr = "SELECT table_name, table_type FROM information_schema.`TABLES` WHERE table_schema = ? ORDER BY table_name, table_type"
 		prepare, err := d.Db.Prepare(sqlStr)
 		checkErr(err)
 		rows, err = prepare.Query(d.DbName)
+		checkErr(err)
 	} else if d.DbType == model.OracleType {
-		sqlStr = "SELECT table_name, table_type FROM user_tab_comments WHERE table_name NOT LIKE '%$0'"
+		sqlStr = "SELECT table_name, table_type FROM user_tab_comments WHERE table_name NOT LIKE '%$0' ORDER BY table_name, table_type"
 		prepare, err := d.Db.Prepare(sqlStr)
 		checkErr(err)
 		rows, err = prepare.Query()
+		checkErr(err)
 	} else if d.DbType == model.PostgreSQLType {
-		sqlStr = "SELECT * FROM (SELECT tablename AS table_name, 'TABLE' AS table_type FROM pg_tables WHERE schemaname='public' UNION SELECT viewname AS table_name, 'VIEW' AS table_type FROM pg_views WHERE schemaname='public') a ORDER BY TABLE_NAME, table_type"
+		sqlStr = "SELECT * FROM (SELECT tablename AS table_name, 'TABLE' AS table_type FROM pg_tables WHERE schemaname='public' UNION SELECT viewname AS table_name, 'VIEW' AS table_type FROM pg_views WHERE schemaname='public') a ORDER BY table_name, table_type"
 		prepare, err := d.Db.Prepare(sqlStr)
 		checkErr(err)
 		rows, err = prepare.Query()
+		checkErr(err)
 	}
 	defer rows.Close()
 	var resultList []model.ProjectTable
@@ -83,6 +86,7 @@ func (d *DbUtil) GetTableInfo(tableName string) (columnList []ColumnInfo) {
 		prepare, err := d.Db.Prepare(sqlStr)
 		checkErr(err)
 		rows, err = prepare.Query()
+		checkErr(err)
 		if !rows.Next() {
 			sqlStr = "SELECT c.column_name, c.data_type, c.column_key, '' AS keyword, c.column_comment FROM ( SELECT column_name, data_type, column_key, column_comment FROM information_schema.COLUMNS WHERE table_name = ?) c"
 		} else {
@@ -91,6 +95,7 @@ func (d *DbUtil) GetTableInfo(tableName string) (columnList []ColumnInfo) {
 		prepare, err = d.Db.Prepare(sqlStr)
 		checkErr(err)
 		rows, err = prepare.Query(tableName)
+		checkErr(err)
 	} else if d.DbType == model.OracleType {
 		sqlStr = `SELECT c.column_name, c.data_type, c.column_key, k.keyword, c.comments
 FROM 
@@ -98,21 +103,30 @@ FROM
 	SELECT * FROM	(
 		SELECT t.column_name, t.data_type, c.comments
 		FROM user_tab_columns t, user_col_comments c
-		WHERE t.column_name = c.column_name AND t.table_name = ? AND c.table_name = ?
+		WHERE t.column_name = c.column_name AND t.table_name = :name AND c.table_name = :name
 	) a left join (
 		SELECT a.constraint_name,  a.column_name as column_key
 		FROM user_cons_columns a, user_constraints b 
-		WHERE a.constraint_name = b.constraint_name AND b.constraint_type = 'P' AND a.table_name = ?
+		WHERE a.constraint_name = b.constraint_name AND b.constraint_type = 'P' AND a.table_name = :name
 	) b ON (a.column_name = b.column_key)
 ) c left join (v$reserved_words) k ON (c.column_name = k.keyword)`
 		prepare, err := d.Db.Prepare(sqlStr)
 		checkErr(err)
 		rows, err = prepare.Query(tableName, tableName, tableName)
+		checkErr(err)
 	} else if d.DbType == model.PostgreSQLType {
-		sqlStr = ``
+		sqlStr = `SELECT a.attname AS column_name, t.typname AS data_type, p.conname AS column_key, '' AS keyword, d.description AS column_comment
+FROM 
+	pg_attribute a
+	LEFT JOIN pg_class c ON a.attrelid = c.oid
+	LEFT JOIN pg_type t ON a.atttypid = t.oid
+	LEFT JOIN pg_description d ON a.attrelid = d.objoid AND a.attnum = d.objsubid
+	LEFT JOIN pg_constraint p ON a.attnum = p.conkey[1] AND p.contype = 'p' AND p.conrelid = c.oid
+WHERE c.relname = $1 AND a.attnum > 0`
 		prepare, err := d.Db.Prepare(sqlStr)
 		checkErr(err)
 		rows, err = prepare.Query(tableName)
+		checkErr(err)
 	}
 	defer rows.Close()
 	var resultList []ColumnInfo
