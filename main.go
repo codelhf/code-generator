@@ -82,7 +82,7 @@ func ExitSystem(w http.ResponseWriter, r *http.Request) {
 func OpenBrowser(uri string) error {
 	var cmd *exec.Cmd
 	if runtime.GOOS == "windows" {
-		cmd = exec.Command("cmd","/c", "start", uri)
+		cmd = exec.Command("cmd", "/c", "start", uri)
 		cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
 	} else if runtime.GOOS == "linux" {
 		cmd = exec.Command("xdg-open", uri)
@@ -101,7 +101,9 @@ func CleanUpload(dir string) error {
 	}
 	for _, file := range files {
 		fullName := dir + "/" + file.Name()
-		if file.IsDir() {
+		if file.Name() == ".gitkeep" {
+			continue
+		} else if file.IsDir() {
 			err = CleanUpload(fullName)
 		} else {
 			err = os.Remove(fullName)

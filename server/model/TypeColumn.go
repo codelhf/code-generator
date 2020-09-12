@@ -6,6 +6,4 @@ type TypeColumn struct {
 	ColumnType   string `json:"columnType"`
 	LanguageType int    `json:"languageType"`
 	FieldType    string `json:"fieldType"`
-	CteTime      string `json:"cteTime"`
-	UteTime      string `json:"uteTime"`
 }

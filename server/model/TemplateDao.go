@@ -3,7 +3,6 @@ package model
 import (
 	"code-generator-go/server/db"
 	"code-generator-go/server/util"
-	"time"
 )
 
 type TemplateDao struct {
@@ -16,10 +15,10 @@ func (d *TemplateDao) List(pageNum, pageSize int, name, desc string) ([]Template
 		session.Limit(pageSize, db.GetOffset(pageNum, pageSize))
 	}
 	if util.IsNotBlank(name) {
-		session.Where("name like ?", "%" + name + "%")
+		session.Where("name like ?", "%"+name+"%")
 	}
 	if util.IsNotBlank(desc) {
-		session.Where("desc like ?", "%" + desc + "%")
+		session.Where("desc like ?", "%"+desc+"%")
 	}
 	dataList := make([]Template, 0)
 	total, err := session.OrderBy("name asc").FindAndCount(&dataList)
@@ -39,8 +38,6 @@ func (d *TemplateDao) Import(templates []Template) bool {
 	session := db.Engine.Table("t_template")
 	for index, template := range templates {
 		template.Id = db.UUID()
-		template.CteTime = util.DateToStr(time.Now())
-		template.UteTime = util.DateToStr(time.Now())
 		templates[index] = template
 	}
 	affected, err := session.InsertMulti(&templates)
@@ -76,8 +73,6 @@ func (d *TemplateDao) NameExists(id, name string) bool {
 func (d *TemplateDao) Insert(template Template) bool {
 	session := db.Engine.Table("t_template")
 	template.Id = db.UUID()
-	template.CteTime = util.DateToStr(time.Now())
-	template.UteTime = util.DateToStr(time.Now())
 	affected, err := session.Insert(&template)
 	util.CheckError(err)
 	return affected == 1
@@ -85,7 +80,6 @@ func (d *TemplateDao) Insert(template Template) bool {
 
 func (d *TemplateDao) Update(id string, template Template) bool {
 	session := db.Engine.Table("t_template")
-	template.UteTime = util.DateToStr(time.Now())
 	affected, err := session.Where("id = ?", id).Update(&template)
 	util.CheckError(err)
 	return affected == 1

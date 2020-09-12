@@ -47,6 +47,14 @@ export default {
       'sidebar'
     ])
   },
+  mounted() {
+    window.addEventListener('beforeunload', e => this.beforeunloadHandler(e))
+    window.addEventListener('unload', e => this.unloadHandler(e))
+  },
+  destroyed() {
+    window.removeEventListener('beforeunload', e => this.beforeunloadHandler(e))
+    window.removeEventListener('unload', e => this.unloadHandler(e))
+  },
   methods: {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
@@ -56,6 +64,16 @@ export default {
     },
     async logout() {
       await this.$store.dispatch('user/logout')
+    },
+    beforeunloadHandler() {
+      this._beforeUnload_time = new Date().getTime()
+    },
+    unloadHandler() {
+      this._unload_time = new Date().getTime() - this._beforeUnload_time
+      // 判断是窗口关闭还是刷新
+      if (this._unload_time <= 5) {
+        this.$store.dispatch('user/logout')
+      }
     }
   }
 }

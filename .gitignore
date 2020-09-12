@@ -267,4 +267,4 @@ Temporary Items
 vendor/
 
 # data2
-db/data2.db
+#db/data2.db

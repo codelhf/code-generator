@@ -4,7 +4,7 @@
       :key="tableKey"
       v-loading="listLoading"
       :data="list.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
-      height="250"
+      height="320"
       highlight-current-row
       border="border"
     >

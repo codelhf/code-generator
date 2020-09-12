@@ -30,8 +30,8 @@
     >
       <el-table-column
         type="selection"
-        width="55">
-      </el-table-column>
+        width="40"
+      />
       <el-table-column :label="$t('template.table.name')" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.name }}</span>
@@ -52,16 +52,6 @@
       <el-table-column :label="$t('template.table.fileType')" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.fileType }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('template.table.cteTime')" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.cteTime }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('template.table.uteTime')" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.uteTime }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('template.table.operation')" align="center" width="160">

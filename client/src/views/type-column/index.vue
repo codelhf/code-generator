@@ -73,16 +73,6 @@
           <span>{{ scope.row.fieldType }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('typeColumn.table.cteTime')" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.cteTime }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('typeColumn.table.uteTime')" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.uteTime }}</span>
-        </template>
-      </el-table-column>
       <el-table-column :label="$t('typeColumn.table.operation')" align="center" width="160">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handleDetail(scope.row.id)">{{ $t('typeColumn.table.edit') }}</el-button>

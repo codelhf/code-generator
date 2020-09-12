@@ -1,8 +1,8 @@
 <template>
-  <div style="padding: 10px;width: 220px;border: 1px solid #eee;border-radius: 4px;">
+  <div style="padding: 10px;border: 1px solid #eee;border-radius: 4px;">
     <el-input v-model="filterText" @input="filterTable" />
     <el-card class="box-card" shadow="never">
-      <div v-for="item in filterData" :key="item.name" :class="item.active ? 'item active' : 'item'" @click="clickTableItem(item)">
+      <div v-for="item in filterData" :key="item.tableName" :class="item.active ? 'item active' : 'item'" @click="clickTableItem(item)">
         <svg-icon class="icon" :icon-class="item.tableType === 1 ? 'table': 'view'" />
         <span class="name">{{ item.tableName }}</span>
       </div>
@@ -49,7 +49,7 @@ export default {
 <style>
   .box-card {
     width: 100%;
-    height: calc(100vh - 160px);
+    height: 560px;
   }
   .box-card .el-card__body{
     padding: 0 20px;

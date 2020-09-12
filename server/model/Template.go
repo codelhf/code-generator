@@ -7,6 +7,4 @@ type Template struct {
 	Type     int    `json:"type"`
 	FileType string `json:"fileType"`
 	Template string `json:"template"`
-	CteTime  string `json:"cteTime"`
-	UteTime  string `json:"uteTime"`
 }

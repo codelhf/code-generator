@@ -3,7 +3,6 @@ package model
 import (
 	"code-generator-go/server/db"
 	"code-generator-go/server/util"
-	"time"
 )
 
 type TypeColumnDao struct {
@@ -32,13 +31,13 @@ func (d *TypeColumnDao) List(pageNum, pageSize int, dbType, languageType int, co
 		session.Where("db_type = ?", dbType)
 	}
 	if util.IsNotBlank(columnType) {
-		session.Where("column_type like ?", "%" + columnType + "%")
+		session.Where("column_type like ?", "%"+columnType+"%")
 	}
 	if languageType > 0 {
 		session.Where("language_type = ?", languageType)
 	}
 	if util.IsNotBlank(fieldType) {
-		session.Where("field_type like ?", "%" + fieldType + "%")
+		session.Where("field_type like ?", "%"+fieldType+"%")
 	}
 	dataList := make([]TypeColumn, 0)
 	total, err := session.OrderBy("column_type, language_type asc").FindAndCount(&dataList)
@@ -60,8 +59,6 @@ func (d *TypeColumnDao) Select(id string) TypeColumn {
 func (d *TypeColumnDao) Insert(typeColumn TypeColumn) bool {
 	session := db.Engine.Table("t_type_column")
 	typeColumn.Id = db.UUID()
-	typeColumn.CteTime = util.DateToStr(time.Now())
-	typeColumn.UteTime = util.DateToStr(time.Now())
 	affected, err := session.Insert(&typeColumn)
 	util.CheckError(err)
 	return affected == 1
@@ -69,7 +66,6 @@ func (d *TypeColumnDao) Insert(typeColumn TypeColumn) bool {
 
 func (d *TypeColumnDao) Update(id string, typeColumn TypeColumn) bool {
 	session := db.Engine.Table("t_type_column")
-	typeColumn.UteTime = util.DateToStr(time.Now())
 	affected, err := session.Where("id = ?", id).Update(&typeColumn)
 	util.CheckError(err)
 	return affected == 1

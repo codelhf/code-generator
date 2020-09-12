@@ -15,17 +15,17 @@
       </el-row>
       <el-row>
         <el-col :span="8">
-          <el-form-item :label="$t('template.item.fileType')" prop="fileType">
-            <el-input v-model="template.fileType" :placeholder="$t('template.item.placeholderFileType')" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
           <el-form-item :label="$t('template.item.type')" prop="type">
-            <el-select v-model="template.type" :placeholder="$t('template.item.placeholderType')">
+            <el-select v-model="template.type" :placeholder="$t('template.item.placeholderType')" style="width: 100%;">
               <el-option :label="$t('template.item.type1')" :value="1" />
               <el-option :label="$t('template.item.type2')" :value="2" />
               <el-option :label="$t('template.item.type3')" :value="3" />
             </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item :label="$t('template.item.fileType')" prop="fileType">
+            <el-input v-model="template.fileType" :placeholder="$t('template.item.placeholderFileType')" />
           </el-form-item>
         </el-col>
       </el-row>

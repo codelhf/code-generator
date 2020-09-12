@@ -6,22 +6,17 @@
       </el-col>
       <el-col :span="20" style="padding-left: 20px;">
         <template-list ref="templateList" :key="projectId" :project-id="projectId" />
-        <el-form ref="currentTable" v-model="currentTable" :inline="true" label-width="100px" label-suffix=":" style="margin-top: 20px;">
-          <el-form-item :label="$t('projectGenerate.currentTable.tableName')">
-            <el-input v-model="currentTable.tableName" disabled />
-          </el-form-item>
+        <el-form ref="currentTable" v-model="currentTable" :inline="true" label-width="100px" style="margin-top: 20px;">
           <el-form-item :label="$t('projectGenerate.currentTable.domainName')">
             <el-input v-model="currentTable.domainName" :placeholder="$t('projectGenerate.currentTable.placeholderDomainName')" />
           </el-form-item>
           <el-form-item :label="$t('projectGenerate.currentTable.generateKey')">
             <el-input v-model="currentTable.generateKey" :placeholder="$t('projectGenerate.currentTable.placeholderGenerateKey')" />
           </el-form-item>
-          <el-row style="text-align: center">
-            <el-form-item>
-              <el-button type="primary" icon="el-icon-video-play" :loading="loading" @click="handleGenerate">{{ $t('projectGenerate.button.generateCode') }}</el-button>
-              <el-button type="primary" icon="el-icon-plus" @click="handleDetail">{{ $t('projectGenerate.button.addTemplate') }}</el-button>
-            </el-form-item>
-          </el-row>
+          <el-form-item label=" ">
+            <el-button type="primary" icon="el-icon-video-play" :loading="loading" @click="handleGenerate">{{ $t('projectGenerate.button.generateCode') }}</el-button>
+            <el-button type="primary" icon="el-icon-plus" @click="handleDetail">{{ $t('projectGenerate.button.addTemplate') }}</el-button>
+          </el-form-item>
         </el-form>
         <div style="width: 100%;">
           <el-input v-model="generateResult" type="textarea" :rows="10" />
@@ -83,15 +78,16 @@ export default {
         } else {
           this.currentTable = table
         }
-        // this.currentTable.active = !table.active || true
-        // this.tableList.map(item => {
-        //   if (item.tableName === this.currentTable.tableName) {
-        //     item.id = this.currentTable.id
-        //     item.domainName = this.currentTable.domainName
-        //     item.generateKey = this.currentTable.generateKey
-        //     item.active = this.currentTable.active
-        //   }
-        // })
+        this.tableList = this.tableList.map(item => {
+          item.active = false
+          if (item.tableName === this.currentTable.tableName) {
+            item.id = this.currentTable.id
+            item.domainName = this.currentTable.domainName
+            item.generateKey = this.currentTable.generateKey
+            item.active = this.currentTable.active = true
+          }
+          return item
+        })
       })
     },
     handleGenerate() {

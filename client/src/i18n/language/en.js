@@ -56,7 +56,7 @@ export default {
       add: 'Add Project'
     },
     table: {
-      name: 'projectName',
+      name: 'ProjectName',
       desc: 'ProjectDesc',
       cteTime: 'CreateTime',
       uteTime: 'UpdateTime',
@@ -149,7 +149,6 @@ export default {
   },
   projectGenerate: {
     currentTable: {
-      tableName: 'TableName',
       domainName: 'ClassName',
       placeholderDomainName: 'Please enter the class name',
       generateKey: 'PrimaryKey',
@@ -214,17 +213,17 @@ export default {
   },
   template: {
     listQuery: {
-      name: 'Name',
+      name: 'TemplateName',
       placeholderName: 'Please enter the template name',
-      desc: 'Desc',
+      desc: 'TemplateDesc',
       placeholderDesc: 'Please enter a template description'
     },
     listButton: {
       search: 'Search',
       reset: 'Reset',
       add: 'Add Template',
-      export: 'export',
-      import: 'import'
+      import: 'Import',
+      export: 'Export'
     },
     excel: {
       fileName: 'Template List',
@@ -232,16 +231,14 @@ export default {
       warning: 'Please select the template to export'
     },
     table: {
-      name: 'Name',
-      desc: 'Desc',
-      type: 'Type',
+      name: 'TemplateName',
+      desc: 'TemplateDesc',
+      type: 'TemplateType',
       type1: 'Table Template',
       type2: 'Common Template',
       type3: 'Method Template',
       fileType: 'FileType',
       template: 'Template',
-      cteTime: 'CreateTime',
-      uteTime: 'UpdateTime',
       operation: 'Operate',
       edit: 'Edit',
       delete: 'Delete'
@@ -255,11 +252,11 @@ export default {
     item: {
       addTitle: 'Add Template',
       editTitle: 'Edit Template',
-      name: 'Name',
+      name: 'TemplateName',
       placeholderName: 'Please enter the English name of the template',
-      desc: 'Desc',
+      desc: 'TemplateDesc',
       placeholderDesc: 'Please enter a template description',
-      type: 'Type',
+      type: 'TemplateType',
       type1: 'Table Template',
       type2: 'Common Template',
       type3: 'Method Template',
@@ -299,8 +296,6 @@ export default {
       type1: 'Default field',
       type2: 'Custom field',
       value: 'FieldValue',
-      cteTime: 'CreateTime',
-      uteTime: 'UpdateTime',
       operation: 'Operate',
       edit: 'Edit',
       delete: 'Delete'
@@ -350,8 +345,6 @@ export default {
       columnType: 'ColumnType',
       languageType: 'Language',
       fieldType: 'FieldType',
-      cteTime: 'CreateTime',
-      uteTime: 'UpdateTime',
       operation: 'Operate',
       edit: 'Edit',
       delete: 'Delete'

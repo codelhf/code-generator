@@ -149,8 +149,7 @@ export default {
   },
   projectGenerate: {
     currentTable: {
-      tableName: '表名',
-      domainName: '类型',
+      domainName: '类名',
       placeholderDomainName: '请输入类名',
       generateKey: '主键',
       placeholderGenerateKey: '请输入主键'
@@ -240,8 +239,6 @@ export default {
       type3: '模板方法',
       fileType: '文件类型',
       template: '模板内容',
-      cteTime: '创建时间',
-      uteTime: '更新时间',
       operation: '操作',
       edit: '编辑',
       delete: '删除'
@@ -299,8 +296,6 @@ export default {
       type1: '默认字段',
       type2: '自定义字段',
       value: '字段值',
-      cteTime: '创建时间',
-      uteTime: '更新时间',
       operation: '操作',
       edit: '编辑',
       delete: '删除'
@@ -350,8 +345,6 @@ export default {
       columnType: '数据列类型',
       languageType: '语言类型',
       fieldType: '字段类型',
-      cteTime: '创建时间',
-      uteTime: '更新时间',
       operation: '操作',
       edit: '编辑',
       delete: '删除'
