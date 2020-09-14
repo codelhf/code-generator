@@ -22,7 +22,7 @@ The core concept of the generator is to customize and manage templates, and use 
 ![image](image/2020-09-14_7.jpg)
 ![image](image/2020-09-14_8.jpg)
 
-## 注意事项
+## Attention
 1. The generator is based on the GO language template, and you need to understand the GO language template to write a template
 2. The date format string of GO language is a specific character 2006-01-02 15:04:05
 3. In the range loop of the GO language template, the template global variables cannot be obtained through .A, and need to be obtained by way of $.A
@@ -36,4 +36,4 @@ It is recommended that other template variables be introduced by defining variab
 8. The project uses the Chrome browser to develop the page and other browsers are not adapted, so it is recommended to use the Chrome browser to open
 
 ## License
-The code is distributed under the MIT license, please feel free to use the project in your proprietary software.
+The code is distributed under the MIT license, please feel free to use the project in your proprietary software

@@ -37,4 +37,4 @@ Language: [English](./README-en.md) | [中文简体](./README.md)
 
 ## License
 
-代码是根据MIT许可分发的，请随意在您的专有软件中使用项目。
+代码是根据MIT许可分发的，请随意在您的专有软件中使用项目
