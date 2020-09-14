@@ -6,7 +6,7 @@
       </el-col>
       <el-col :span="20" style="padding-left: 20px;">
         <template-list ref="templateList" :key="projectId" :project-id="projectId" />
-        <el-form ref="currentTable" v-model="currentTable" :inline="true" label-width="100px" style="margin-top: 20px;">
+        <el-form ref="currentTable" v-model="currentTable" :inline="true" label-width="80px" style="margin-top: 20px;">
           <el-form-item :label="$t('projectGenerate.currentTable.domainName')">
             <el-input v-model="currentTable.domainName" :placeholder="$t('projectGenerate.currentTable.placeholderDomainName')" />
           </el-form-item>

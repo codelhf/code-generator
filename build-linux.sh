@@ -1,2 +1,3 @@
 # Linux
-$ go build -o example
+$ go build -o code-generator
+$ ./code-generator
