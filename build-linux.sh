@@ -1,3 +1,3 @@
 # Linux
-$ go build -o code-generator
-$ ./code-generator
+go build -o code-generator
+./code-generator

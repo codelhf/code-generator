@@ -82,22 +82,13 @@ func (d *DbUtil) GetTableInfo(tableName string) (columnList []ColumnInfo) {
 	var sqlStr string
 	var rows *sql.Rows
 	if d.DbType == model.MysqlType {
-		sqlStr = "SELECT table_name FROM information_schema.TABLES WHERE table_schema = 'mysql' and  table_name ='help_keyword';"
+		sqlStr = "SELECT c.column_name, c.data_type, c.column_key, c.column_comment FROM information_schema.COLUMNS c WHERE c.table_schema = ? AND c.table_name = ?"
 		prepare, err := d.Db.Prepare(sqlStr)
 		checkErr(err)
-		rows, err = prepare.Query()
-		checkErr(err)
-		if !rows.Next() {
-			sqlStr = "SELECT c.column_name, c.data_type, c.column_key, '' AS keyword, c.column_comment FROM ( SELECT column_name, data_type, column_key, column_comment FROM information_schema.COLUMNS WHERE table_name = ?) c"
-		} else {
-			sqlStr = "SELECT c.column_name, c.data_type, c.column_key, k.`name` AS keyword, c.column_comment FROM (SELECT column_name, data_type, column_key, column_comment FROM information_schema.columns WHERE table_name = ?) c LEFT JOIN mysql.help_keyword k ON ( c.column_name = k.`name`)"
-		}
-		prepare, err = d.Db.Prepare(sqlStr)
-		checkErr(err)
-		rows, err = prepare.Query(tableName)
+		rows, err = prepare.Query(d.DbName, tableName)
 		checkErr(err)
 	} else if d.DbType == model.OracleType {
-		sqlStr = `SELECT c.column_name, c.data_type, c.column_key, k.keyword, c.comments
+		sqlStr = `SELECT c.column_name, c.data_type, c.column_key, c.comments
 FROM 
 (
 	SELECT * FROM	(
@@ -109,13 +100,13 @@ FROM
 		FROM user_cons_columns a, user_constraints b 
 		WHERE a.constraint_name = b.constraint_name AND b.constraint_type = 'P' AND a.table_name = :name
 	) b ON (a.column_name = b.column_key)
-) c left join (v$reserved_words) k ON (c.column_name = k.keyword)`
+) c `
 		prepare, err := d.Db.Prepare(sqlStr)
 		checkErr(err)
 		rows, err = prepare.Query(tableName, tableName, tableName)
 		checkErr(err)
 	} else if d.DbType == model.PostgreSQLType {
-		sqlStr = `SELECT a.attname AS column_name, t.typname AS data_type, p.conname AS column_key, '' AS keyword, d.description AS column_comment
+		sqlStr = `SELECT a.attname AS column_name, t.typname AS data_type, p.conname AS column_key, d.description AS column_comment
 FROM 
 	pg_attribute a
 	LEFT JOIN pg_class c ON a.attrelid = c.oid
@@ -134,9 +125,8 @@ WHERE c.relname = $1 AND a.attnum > 0`
 		ColumnName := ""
 		Type := ""
 		PrimaryKey := sql.NullString{String: "", Valid: false}
-		Keyword := sql.NullString{String: "", Valid: false}
 		Comment := sql.NullString{String: "", Valid: false}
-		err := rows.Scan(&ColumnName, &Type, &PrimaryKey, &Keyword, &Comment)
+		err := rows.Scan(&ColumnName, &Type, &PrimaryKey, &Comment)
 		checkErr(err)
 		var IsPrimaryKey bool
 		if PrimaryKey.Valid && util.IsNotBlank(PrimaryKey.String) {
@@ -144,13 +134,7 @@ WHERE c.relname = $1 AND a.attnum > 0`
 		} else {
 			IsPrimaryKey = false
 		}
-		var IsKeyword bool
-		if Keyword.Valid && util.IsNotBlank(Keyword.String) {
-			IsKeyword = true
-		} else {
-			IsKeyword = false
-		}
-		columnInfo := NewColumnInfo(ColumnName, Type, IsPrimaryKey, IsKeyword, Comment.String, d.TypeList)
+		columnInfo := NewColumnInfo(ColumnName, Type, IsPrimaryKey, true, Comment.String, d.TypeList)
 		resultList = append(resultList, columnInfo)
 	}
 	return resultList
