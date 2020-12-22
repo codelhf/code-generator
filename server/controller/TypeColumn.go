@@ -34,10 +34,10 @@ func TypeColumnInsert(w http.ResponseWriter, r *http.Request) {
 	common.Bind(r, &temp)
 	row := typeColumnDao.Insert(temp)
 	if !row {
-		common.FailMsg(w, "save typeColumn failed")
+		common.FailMsg(w, "Save TypeColumn Failed")
 		return
 	}
-	common.SuccessMsg(w, "save typeColumn success")
+	common.SuccessMsg(w, "Save TypeColumn Success")
 }
 
 func TypeColumnUpdate(w http.ResponseWriter, r *http.Request) {
@@ -45,10 +45,10 @@ func TypeColumnUpdate(w http.ResponseWriter, r *http.Request) {
 	common.Bind(r, &temp)
 	row := typeColumnDao.Update(temp.Id, temp)
 	if !row {
-		common.FailMsg(w, "update typeColumn failed")
+		common.FailMsg(w, "Update TypeColumn Failed")
 		return
 	}
-	common.SuccessMsg(w, "update typeColumn success")
+	common.SuccessMsg(w, "Update TypeColumn Success")
 }
 
 func TypeColumnDelete(w http.ResponseWriter, r *http.Request) {
@@ -56,8 +56,8 @@ func TypeColumnDelete(w http.ResponseWriter, r *http.Request) {
 	idList := strings.Split(ids, ",")
 	row := typeColumnDao.Delete(idList)
 	if !row {
-		common.FailMsg(w, "delete typeColumn failed")
+		common.FailMsg(w, "Delete TypeColumn Failed")
 		return
 	}
-	common.SuccessMsg(w, "delete typeColumn success")
+	common.SuccessMsg(w, "Delete TypeColumn Success")
 }

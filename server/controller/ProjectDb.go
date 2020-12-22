@@ -18,10 +18,10 @@ func ProjectDbInsert(w http.ResponseWriter, r *http.Request) {
 	common.Bind(r, &temp)
 	row := projectDbDao.Insert(temp.ProjectId, temp)
 	if !row {
-		common.FailMsg(w, "save projectDb failed")
+		common.FailMsg(w, "Save ProjectDb Failed")
 		return
 	}
-	common.SuccessMsg(w, "save projectDb success")
+	common.SuccessMsg(w, "Save ProjectDb Success")
 }
 
 func ProjectDbUpdate(w http.ResponseWriter, r *http.Request) {
@@ -29,8 +29,8 @@ func ProjectDbUpdate(w http.ResponseWriter, r *http.Request) {
 	common.Bind(r, &temp)
 	row := projectDbDao.Update(temp.ProjectId, temp.Id, temp)
 	if !row {
-		common.FailMsg(w, "update projectDb failed")
+		common.FailMsg(w, "Update ProjectDb Failed")
 		return
 	}
-	common.SuccessMsg(w, "update projectDb success")
+	common.SuccessMsg(w, "Update ProjectDb Success")
 }

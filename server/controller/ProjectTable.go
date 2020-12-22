@@ -15,7 +15,7 @@ func ProjectTableAll(w http.ResponseWriter, r *http.Request) {
 	projectId := r.FormValue("projectId")
 	dataSource := projectDbDao.Select(projectId, "")
 	if util.IsBlank(dataSource.Url) {
-		common.FailMsg(w, "please add database")
+		common.FailMsg(w, "Please add Database")
 		return
 	}
 	data := make([]model.ProjectTable, 0)

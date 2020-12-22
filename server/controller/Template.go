@@ -38,10 +38,10 @@ func TemplateImport(w http.ResponseWriter, r *http.Request) {
 	util.ReadExcel(r, "uploadFile", sheetName, heads, &dataList)
 	row := templateDao.Import(dataList)
 	if !row {
-		common.FailMsg(w, "import templates failed")
+		common.FailMsg(w, "Import Templates Failed")
 		return
 	}
-	common.SuccessMsg(w,"import templates success")
+	common.SuccessMsg(w, "Import Templates Success")
 }
 
 func TemplateSelect(w http.ResponseWriter, r *http.Request) {
@@ -55,7 +55,7 @@ func TemplateNameExists(w http.ResponseWriter, r *http.Request) {
 	name := r.FormValue("name")
 	row := templateDao.NameExists(id, name)
 	if row {
-		common.FailMsg(w, "template is exists")
+		common.FailMsg(w, "Template is Exists")
 		return
 	}
 	common.SuccessMsg(w, "")
@@ -66,10 +66,10 @@ func TemplateInsert(w http.ResponseWriter, r *http.Request) {
 	common.Bind(r, &temp)
 	row := templateDao.Insert(temp)
 	if !row {
-		common.FailMsg(w, "save template failed")
+		common.FailMsg(w, "Save Template Failed")
 		return
 	}
-	common.SuccessMsg(w, "save template success")
+	common.SuccessMsg(w, "Save Template Success")
 }
 
 func TemplateUpdate(w http.ResponseWriter, r *http.Request) {
@@ -77,10 +77,10 @@ func TemplateUpdate(w http.ResponseWriter, r *http.Request) {
 	common.Bind(r, &temp)
 	row := templateDao.Update(temp.Id, temp)
 	if !row {
-		common.FailMsg(w, "update template failed")
+		common.FailMsg(w, "Update Template Failed")
 		return
 	}
-	common.SuccessMsg(w, "update template success")
+	common.SuccessMsg(w, "Update Template Success")
 }
 
 func TemplateDelete(w http.ResponseWriter, r *http.Request) {
@@ -88,8 +88,8 @@ func TemplateDelete(w http.ResponseWriter, r *http.Request) {
 	idList := strings.Split(ids, ",")
 	row := templateDao.Delete(idList)
 	if !row {
-		common.FailMsg(w, "delete template failed")
+		common.FailMsg(w, "Delete Template Failed")
 		return
 	}
-	common.SuccessMsg(w, "delete template success")
+	common.SuccessMsg(w, "Delete Template Success")
 }

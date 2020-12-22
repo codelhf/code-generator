@@ -31,25 +31,25 @@ func TemplateFieldInsert(w http.ResponseWriter, r *http.Request) {
 	common.Bind(r, &temp)
 	row := templateFieldDao.Insert(temp)
 	if !row {
-		common.FailMsg(w, "save templateField failed")
+		common.FailMsg(w, "Save TemplateField Failed")
 		return
 	}
-	common.SuccessMsg(w, "save templateField success")
+	common.SuccessMsg(w, "Save TemplateField Success")
 }
 
 func TemplateFieldUpdate(w http.ResponseWriter, r *http.Request) {
 	temp := model.TemplateField{}
 	common.Bind(r, &temp)
 	if temp.Type == 1 {
-		common.FailMsg(w,"can not update default field")
+		common.FailMsg(w, "Can not Update Default TemplateField")
 		return
 	}
 	row := templateFieldDao.Update(temp.Id, temp)
 	if !row {
-		common.FailMsg(w, "update templateField failed")
+		common.FailMsg(w, "Update TemplateField Failed")
 		return
 	}
-	common.SuccessMsg(w, "update templateField success")
+	common.SuccessMsg(w, "Update TemplateField Success")
 }
 
 func TemplateFieldDelete(w http.ResponseWriter, r *http.Request) {
@@ -57,8 +57,8 @@ func TemplateFieldDelete(w http.ResponseWriter, r *http.Request) {
 	idList := strings.Split(ids, ",")
 	row := templateFieldDao.Delete(idList)
 	if !row {
-		common.FailMsg(w, "delete templateField failed")
+		common.FailMsg(w, "Delete TemplateField Failed")
 		return
 	}
-	common.SuccessMsg(w, "delete templateField success")
+	common.SuccessMsg(w, "Delete TemplateField Success")
 }

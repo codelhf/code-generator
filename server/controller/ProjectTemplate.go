@@ -30,10 +30,10 @@ func ProjectTemplateInsert(w http.ResponseWriter, r *http.Request) {
 	common.Bind(r, &temp)
 	row := projectTemplateDao.Insert(temp)
 	if !row {
-		common.FailMsg(w, "save projectTemplate failed")
+		common.FailMsg(w, "Save ProjectTemplate Failed")
 		return
 	}
-	common.SuccessMsg(w, "save projectTemplate success")
+	common.SuccessMsg(w, "Save ProjectTemplate Success")
 }
 
 func ProjectTemplateUpdate(w http.ResponseWriter, r *http.Request) {
@@ -41,10 +41,10 @@ func ProjectTemplateUpdate(w http.ResponseWriter, r *http.Request) {
 	common.Bind(r, &temp)
 	row := projectTemplateDao.Update(temp.Id, temp)
 	if !row {
-		common.FailMsg(w, "update projectTemplate failed")
+		common.FailMsg(w, "Update ProjectTemplate Failed")
 		return
 	}
-	common.SuccessMsg(w, "update projectTemplate success")
+	common.SuccessMsg(w, "Update ProjectTemplate Success")
 }
 
 func ProjectTemplateDelete(w http.ResponseWriter, r *http.Request) {
@@ -53,8 +53,8 @@ func ProjectTemplateDelete(w http.ResponseWriter, r *http.Request) {
 	idList := strings.Split(ids, ",")
 	row := projectTemplateDao.Delete(projectId, idList)
 	if !row {
-		common.FailMsg(w, "delete projectTemplate failed")
+		common.FailMsg(w, "Delete ProjectTemplate Failed")
 		return
 	}
-	common.SuccessMsg(w, "delete projectTemplate success")
+	common.SuccessMsg(w, "Delete ProjectTemplate Success")
 }

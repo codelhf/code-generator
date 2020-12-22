@@ -66,12 +66,24 @@ func HandleRouter() {
 	http.HandleFunc("/templateField/insert", controller.TemplateFieldInsert)
 	http.HandleFunc("/templateField/update", controller.TemplateFieldUpdate)
 	http.HandleFunc("/templateField/delete", controller.TemplateFieldDelete)
+	//templateGroup
+	http.HandleFunc("/templateGroup/list", controller.TemplateGroupList)
+	http.HandleFunc("/templateGroup/select", controller.TemplateGroupSelect)
+	http.HandleFunc("/templateGroup/insert", controller.TemplateGroupInsert)
+	http.HandleFunc("/templateGroup/update", controller.TemplateGroupUpdate)
+	http.HandleFunc("/templateGroup/delete", controller.TemplateGroupDelete)
 	//typeColumn
 	http.HandleFunc("/typeColumn/list", controller.TypeColumnList)
 	http.HandleFunc("/typeColumn/select", controller.TypeColumnSelect)
 	http.HandleFunc("/typeColumn/insert", controller.TypeColumnInsert)
 	http.HandleFunc("/typeColumn/update", controller.TypeColumnUpdate)
 	http.HandleFunc("/typeColumn/delete", controller.TypeColumnDelete)
+	//typeLanguage
+	http.HandleFunc("/typeLanguage/list", controller.TypeLanguageList)
+	http.HandleFunc("/typeLanguage/select", controller.TypeLanguageSelect)
+	http.HandleFunc("/typeLanguage/insert", controller.TypeLanguageInsert)
+	http.HandleFunc("/typeLanguage/update", controller.TypeLanguageUpdate)
+	http.HandleFunc("/typeLanguage/delete", controller.TypeLanguageDelete)
 }
 
 func ExitSystem(w http.ResponseWriter, r *http.Request) {

@@ -34,10 +34,10 @@ func ProjectInsert(w http.ResponseWriter, r *http.Request) {
 	common.Bind(r, &temp)
 	row := projectDao.Insert(temp)
 	if !row {
-		common.FailMsg(w, "save project failed")
+		common.FailMsg(w, "Save Project Failed")
 		return
 	}
-	common.SuccessMsg(w, "save project success")
+	common.SuccessMsg(w, "Save Project Success")
 }
 
 func ProjectUpdate(w http.ResponseWriter, r *http.Request) {
@@ -45,10 +45,10 @@ func ProjectUpdate(w http.ResponseWriter, r *http.Request) {
 	common.Bind(r, &temp)
 	row := projectDao.Update(temp.Id, temp)
 	if !row {
-		common.FailMsg(w, "update project failed")
+		common.FailMsg(w, "Update Project Failed")
 		return
 	}
-	common.SuccessMsg(w, "update project success")
+	common.SuccessMsg(w, "Update Project Success")
 }
 
 func ProjectDelete(w http.ResponseWriter, r *http.Request) {
@@ -62,10 +62,10 @@ func ProjectDelete(w http.ResponseWriter, r *http.Request) {
 	}
 	row := projectDao.Delete(idList)
 	if !row {
-		common.FailMsg(w, "delete project failed")
+		common.FailMsg(w, "Delete Project Failed")
 		return
 	}
-	common.SuccessMsg(w, "delete project success")
+	common.SuccessMsg(w, "Delete Project Success")
 }
 
 func ProjectLastId(w http.ResponseWriter, r *http.Request) {
