@@ -7,14 +7,14 @@ import (
 )
 
 type SingleInvoker struct {
-	TableName    string
-	ClassName    string
-	GeneratedKey string
-	IsView       bool
-	ColumnInfo   []ColumnInfo
-	CustomField  []model.TemplateField
-	config       model.Configuration
-	dbUtil       DbUtil
+	TableName   string
+	ClassName   string
+	ClassDesc   string
+	IsView      bool
+	ColumnInfo  []ColumnInfo
+	CustomField []model.TemplateField
+	config      model.Configuration
+	dbUtil      DbUtil
 }
 
 func (s *SingleInvoker) execute() string {
@@ -55,6 +55,7 @@ func (s *SingleInvoker) execute() string {
 	data2["allColumn"] = s.ColumnInfo
 	data2["pKeyColumn"] = s.GetPrimaryKeyColumnInfo()
 	data2["ClassName"] = s.ClassName
+	data2["ClassDesc"] = s.ClassDesc
 	data2["className"] = util.FirstToLowerCase(s.ClassName)
 
 	resultString := ""
@@ -117,10 +118,6 @@ func (s *SingleInvoker) InitTableInfo() {
 		if &s.config.DataSource.DelimitKeyword != nil && columnInfo.IsKeyword {
 			columnInfo.ColumnName = s.config.DataSource.DelimitKeyword + columnInfo.ColumnName + s.config.DataSource.DelimitKeyword
 		}
-		// 自定义主键
-		if &s.GeneratedKey != nil && strings.EqualFold(s.GeneratedKey, columnInfo.ColumnName) {
-			columnInfo.IsPrimaryKey = true
-		}
 		fullColumn[i] = columnInfo
 	}
 	s.ColumnInfo = fullColumn
@@ -133,6 +130,6 @@ func (s *SingleInvoker) GetPrimaryKeyColumnInfo() ColumnInfo {
 			return columnInfo
 		}
 	}
-	//没有主键也没有自定义主键
-	return NewColumnInfo("id", "varchar", true, false, "", s.dbUtil.TypeList)
+	//没有主键默认取第一列
+	return s.ColumnInfo[0]
 }

@@ -36,14 +36,14 @@ func (c *CodeGenerator) Generate(tables []model.ProjectTable) string {
 				projectTableDao.Insert(table)
 			} else {
 				projectTable.DomainName = table.DomainName
-				projectTable.GenerateKey = table.GenerateKey
+				projectTable.DomainDesc = table.DomainDesc
 				projectTableDao.Update(projectTable.Id, projectTable)
 			}
 			tableName := table.TableName
 			domainName := table.DomainName
-			generateKey := table.GenerateKey
+			domainDesc := table.DomainDesc
 			isView := table.TableType == 2
-			resultString += c.single(tableName, domainName, generateKey, isView, customFields, c.config, DbUtil)
+			resultString += c.single(tableName, domainName, domainDesc, isView, customFields, c.config, DbUtil)
 		}
 		DbUtil.Close()
 	}
@@ -51,12 +51,12 @@ func (c *CodeGenerator) Generate(tables []model.ProjectTable) string {
 	return resultString
 }
 
-func (c *CodeGenerator) single(tableName, domainName, generateKey string, isView bool,
+func (c *CodeGenerator) single(tableName, domainName, domainDesc string, isView bool,
 	customFields []model.TemplateField, config model.Configuration, dbUtil DbUtil) string {
 	invoker := SingleInvoker{}
 	invoker.TableName = tableName
 	invoker.ClassName = domainName
-	invoker.GeneratedKey = generateKey
+	invoker.ClassDesc = domainDesc
 	invoker.IsView = isView
 	invoker.CustomField = customFields
 	invoker.config = config

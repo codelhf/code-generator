@@ -211,6 +211,15 @@ func SqlTypeToColumnType(sqlType string, typeList []model.TypeColumn) string {
 	for i := 0; i < len(typeList); i++ {
 		typeItem := typeList[i]
 		if strings.EqualFold(strings.ToLower(sqlType), strings.ToLower(typeItem.ColumnType)) {
+			if strings.EqualFold("varchar", strings.ToLower(sqlType)) {
+				return "VARCHAR"
+			}
+			if strings.EqualFold("int", strings.ToLower(sqlType)) {
+				return "INTEGER"
+			}
+			if strings.EqualFold("datetime", strings.ToLower(sqlType)) {
+				return "TIMESTAMP"
+			}
 			return typeItem.ColumnType
 		}
 	}
