@@ -41,7 +41,7 @@ func (d *DbUtil) Close() bool {
 func (d *DbUtil) GetAllTable() []model.ProjectTable {
 	var sqlStr string
 	var rows *sql.Rows
-	if d.DbType == model.MysqlType {
+	if d.DbType == model.MySQLType {
 		sqlStr = "SELECT table_name, table_type FROM information_schema.`TABLES` WHERE table_schema = ? ORDER BY table_name, table_type"
 		prepare, err := d.Db.Prepare(sqlStr)
 		checkErr(err)
@@ -81,7 +81,7 @@ func (d *DbUtil) GetAllTable() []model.ProjectTable {
 func (d *DbUtil) GetTableInfo(tableName string) (columnList []ColumnInfo) {
 	var sqlStr string
 	var rows *sql.Rows
-	if d.DbType == model.MysqlType {
+	if d.DbType == model.MySQLType {
 		sqlStr = "SELECT c.column_name, c.data_type, c.column_key, c.column_comment FROM information_schema.COLUMNS c WHERE c.table_schema = ? AND c.table_name = ?"
 		prepare, err := d.Db.Prepare(sqlStr)
 		checkErr(err)
@@ -142,7 +142,7 @@ WHERE c.relname = $1 AND a.attnum > 0`
 
 //获取数据库驱动名
 func GetDriverName(Type int) string {
-	if Type == model.MysqlType {
+	if Type == model.MySQLType {
 		return model.MysqlName
 	} else if Type == model.OracleType {
 		return model.OracleName
@@ -155,7 +155,7 @@ func GetDriverName(Type int) string {
 
 //获取数据库的连接URL
 func getDataSourceName(dataSource model.ProjectDb) string {
-	if dataSource.Type == model.MysqlType {
+	if dataSource.Type == model.MySQLType {
 		return dataSource.Url
 	} else if dataSource.Type == model.OracleType {
 		return dataSource.Url

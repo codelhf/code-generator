@@ -8,13 +8,22 @@ import (
 type TypeColumnDao struct {
 }
 
-func (d *TypeColumnDao) ListAll(dbType, languageType int) []TypeColumn {
+func (d *TypeColumnDao) AllDBType() []TypeDB {
+	dataList := make([]TypeDB, 0)
+	dataList = append(dataList, TypeDB{MySQLType, "MySQL"})
+	dataList = append(dataList, TypeDB{OracleType, "Oracle"})
+	dataList = append(dataList, TypeDB{PostgreSQLType, "PostgreSQL"})
+	return dataList
+}
+
+//codegen使用
+func (d *TypeColumnDao) ListAll(dbType int, languageId string) []TypeColumn {
 	session := db.Engine.Table("t_type_column")
 	if dbType > 0 {
 		session.Where("db_type = ?", dbType)
 	}
-	if languageType > 0 {
-		session.Where("language_type = ?", languageType)
+	if util.IsNotBlank(languageId) {
+		session.Where("language_id = ?", languageId)
 	}
 	dataList := make([]TypeColumn, 0)
 	err := session.Find(&dataList)
@@ -22,10 +31,13 @@ func (d *TypeColumnDao) ListAll(dbType, languageType int) []TypeColumn {
 	return dataList
 }
 
-func (d *TypeColumnDao) List(pageNum, pageSize int, dbType, languageType int, columnType, fieldType string) ([]TypeColumn, int64) {
+func (d *TypeColumnDao) List(pageNum, pageSize int, languageId, columnType, fieldType string, dbType int) ([]TypeColumn, int64) {
 	session := db.Engine.Table("t_type_column")
 	if pageNum > 0 && pageSize > 0 {
 		session.Limit(pageSize, db.GetOffset(pageNum, pageSize))
+	}
+	if util.IsNotBlank(languageId) {
+		session.Where("language_id = ?", languageId)
 	}
 	if dbType > 0 {
 		session.Where("db_type = ?", dbType)
@@ -33,14 +45,11 @@ func (d *TypeColumnDao) List(pageNum, pageSize int, dbType, languageType int, co
 	if util.IsNotBlank(columnType) {
 		session.Where("column_type like ?", "%"+columnType+"%")
 	}
-	if languageType > 0 {
-		session.Where("language_type = ?", languageType)
-	}
 	if util.IsNotBlank(fieldType) {
 		session.Where("field_type like ?", "%"+fieldType+"%")
 	}
 	dataList := make([]TypeColumn, 0)
-	total, err := session.OrderBy("column_type, language_type asc").FindAndCount(&dataList)
+	total, err := session.OrderBy("column_type, language_id asc").FindAndCount(&dataList)
 	util.CheckError(err)
 	return dataList, total
 }

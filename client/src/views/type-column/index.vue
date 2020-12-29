@@ -5,9 +5,7 @@
         <el-col :span="6">
           <el-form-item :label="$t('typeColumn.listQuery.dbType')">
             <el-select v-model="listQuery.dbType" :placeholder="$t('typeColumn.listQuery.placeholderDbType')" style="width: 200px">
-              <el-option :label="$t('project.database.type1')" :value="1" />
-              <el-option :label="$t('project.database.type2')" :value="2" />
-              <el-option :label="$t('project.database.type3')" :value="3" />
+              <el-option v-for="(item) in dbTypeList" :key="item.id" :label="item.name" :value="item.id" />
             </el-select>
           </el-form-item>
         </el-col>
@@ -18,11 +16,8 @@
         </el-col>
         <el-col :span="6">
           <el-form-item :label="$t('typeColumn.listQuery.languageType')">
-            <el-select v-model="listQuery.languageType" :placeholder="$t('typeColumn.listQuery.placeholderLanguageType')" style="width: 200px">
-              <el-option :label="$t('project.database.languageType1')" :value="1" />
-              <el-option :label="$t('project.database.languageType2')" :value="2" />
-              <el-option :label="$t('project.database.languageType3')" :value="3" />
-              <el-option :label="$t('project.database.languageType4')" :value="4" />
+            <el-select v-model="listQuery.languageId" :placeholder="$t('typeColumn.listQuery.placeholderLanguageType')" style="width: 200px">
+              <el-option v-for="(item) in languageList" :key="item.id" :label="item.name" :value="item.id" />
             </el-select>
           </el-form-item>
         </el-col>
@@ -50,22 +45,12 @@
     >
       <el-table-column :label="$t('typeColumn.table.dbType')" align="center">
         <template slot-scope="scope">
-          <span v-if="scope.row.dbType === 1">{{ $t('project.database.type1') }}</span>
-          <span v-if="scope.row.dbType === 2">{{ $t('project.database.type2') }}</span>
-          <span v-if="scope.row.dbType === 3">{{ $t('project.database.type3') }}</span>
+          <span>{{ scope.row.dbName }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('typeColumn.table.columnType')" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.columnType }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('typeColumn.table.languageType')" align="center">
-        <template slot-scope="scope">
-          <span v-if="scope.row.languageType === 1">{{ $t('project.database.languageType1') }}</span>
-          <span v-if="scope.row.languageType === 2">{{ $t('project.database.languageType2') }}</span>
-          <span v-if="scope.row.languageType === 3">{{ $t('project.database.languageType3') }}</span>
-          <span v-if="scope.row.languageType === 4">{{ $t('project.database.languageType4') }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('typeColumn.table.fieldType')" align="center">
@@ -90,20 +75,15 @@
       <el-form ref="typeColumnForm" :model="typeColumn" :rules="typeColumnRules()" label-width="120px" label-suffix=":">
         <el-form-item :label="$t('typeColumn.item.dbType')" prop="dbType">
           <el-select v-model="typeColumn.dbType" :placeholder="$t('typeColumn.item.placeholderDbType')">
-            <el-option :label="$t('project.database.type1')" :value="1" />
-            <el-option :label="$t('project.database.type2')" :value="2" />
-            <el-option :label="$t('project.database.type3')" :value="3" />
+            <el-option v-for="(item) in dbTypeList" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('typeColumn.item.columnType')" prop="columnType">
           <el-input v-model="typeColumn.columnType" :placeholder="$t('typeColumn.item.placeholderColumnType')" />
         </el-form-item>
         <el-form-item :label="$t('typeColumn.item.languageType')" prop="fieldType">
-          <el-select v-model="typeColumn.languageType" :placeholder="$t('typeColumn.item.placeholderLanguageType')">
-            <el-option :label="$t('project.database.languageType1')" :value="1" />
-            <el-option :label="$t('project.database.languageType2')" :value="2" />
-            <el-option :label="$t('project.database.languageType3')" :value="3" />
-            <el-option :label="$t('project.database.languageType4')" :value="4" />
+          <el-select v-model="typeColumn.languageId" :placeholder="$t('typeColumn.item.placeholderLanguageType')">
+            <el-option v-for="(item) in languageList" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('typeColumn.item.fieldType')" prop="fieldType">
@@ -119,7 +99,9 @@
 </template>
 
 <script>
-import { typeColumnList, typeColumnSelect, typeColumnInsert, typeColumnUpdate, typeColumnDelete } from '../../api/type-column'
+import { typeColumnList, typeColumnSelect, typeColumnInsert, typeColumnUpdate, typeColumnDelete } from '@/api/type-column'
+import { allDbType } from '@/api/type-column'
+import { typeLanguageList } from '@/api/type-language'
 import Pagination from '@/components/Pagination/index'
 export default {
   name: 'TypeColumn',
@@ -138,23 +120,25 @@ export default {
         sort: '-uteTime',
         dbType: null,
         columnType: '',
-        languageType: null,
+        languageId: null,
         fieldType: ''
       },
+      dbTypeList: [],
+      languageList: [],
       dialogFormVisible: false,
       typeColumn: {
         id: '',
+        languageId: null,
         dbType: null,
         columnType: '',
-        languageType: null,
-        fieldType: '',
-        cteTime: '',
-        uteTime: ''
+        fieldType: ''
       }
     }
   },
   created() {
     this.getList()
+    this.getAllDbType()
+    this.getLanguageList()
   },
   methods: {
     typeColumnRules() {
@@ -176,6 +160,16 @@ export default {
         }, 1.5 * 1000)
       })
     },
+    getAllDbType() {
+      allDbType().then(res => {
+        this.dbTypeList = res.data
+      })
+    },
+    getLanguageList() {
+      typeLanguageList({}).then(res => {
+        this.languageList = res.data
+      })
+    },
     handleFilter() {
       this.listQuery.pageNum = 1
       this.getList()
@@ -187,7 +181,7 @@ export default {
         sort: '-uteTime',
         dbType: null,
         columnType: '',
-        languageType: null,
+        languageId: null,
         fieldType: ''
       }
     },
@@ -200,8 +194,8 @@ export default {
           if (this.typeColumn.dbType === 0) {
             this.typeColumn.dbType = null
           }
-          if (this.typeColumn.languageType === 0) {
-            this.typeColumn.languageType = null
+          if (this.typeColumn.languageId === 0) {
+            this.typeColumn.languageId = null
           }
         })
       }

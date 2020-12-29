@@ -110,9 +110,7 @@
           <el-col :span="10">
             <el-form-item :label="$t('project.database.type')" prop="type">
               <el-select v-model="database.type" :placeholder="$t('project.database.placeholderType')">
-                <el-option :label="$t('project.database.type1')" :value="1" />
-                <el-option :label="$t('project.database.type2')" :value="2" />
-                <el-option :label="$t('project.database.type3')" :value="3" />
+                <el-option v-for="item in dbTypeList" :key="item.id" :label="item.name" :value="item.id" />
               </el-select>
             </el-form-item>
           </el-col>
@@ -153,12 +151,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="10">
-            <el-form-item :label="$t('project.database.languageType')" prop="languageType">
-              <el-select v-model="database.languageType" :placeholder="$t('project.database.placeholderLanguageType')">
-                <el-option :label="$t('project.database.languageType1')" :value="1" />
-                <el-option :label="$t('project.database.languageType2')" :value="2" />
-                <el-option :label="$t('project.database.languageType3')" :value="3" />
-                <el-option :label="$t('project.database.languageType4')" :value="4" />
+            <el-form-item :label="$t('project.database.languageType')" prop="languageId">
+              <el-select v-model="database.languageId" :placeholder="$t('project.database.placeholderLanguageType')">
+                <el-option v-for="item in languageList" :key="item.id" :label="item.name" :value="item.id" />
               </el-select>
             </el-form-item>
           </el-col>
@@ -173,8 +168,10 @@
 </template>
 
 <script>
-import { projectList, projectSelect, projectInsert, projectUpdate, projectDelete } from '../../api/project'
-import { projectDbSelect, projectDbInsert, projectDbUpdate } from '../../api/project-db'
+import { projectList, projectSelect, projectInsert, projectUpdate, projectDelete } from '@/api/project'
+import { projectDbSelect, projectDbInsert, projectDbUpdate } from '@/api/project-db'
+import { allDbType } from '@/api/type-column'
+import { typeLanguageList } from '@/api/type-language'
 import Pagination from '@/components/Pagination/index'
 export default {
   name: 'Project',
@@ -194,6 +191,8 @@ export default {
         name: '',
         desc: ''
       },
+      dbTypeList: [],
+      languageList: [],
       dialogFormVisible: false,
       project: {
         id: '',
@@ -220,12 +219,14 @@ export default {
         username: '',
         password: '',
         delimitKeyword: '',
-        languageType: null
+        languageId: ''
       }
     }
   },
   created() {
     this.getList()
+    this.getAllDbType()
+    this.getLanguageList()
   },
   methods: {
     projectRules() {
@@ -250,7 +251,7 @@ export default {
         username: [{ required: true, message: this.$t('project.databaseRules.username'), trigger: 'blur' }],
         password: [{ required: true, message: this.$t('project.databaseRules.password'), trigger: 'blur' }],
         delimitKeyword: [{ required: true, message: this.$t('project.databaseRules.delimitKeyword'), trigger: 'blur' }],
-        languageType: [{ required: true, message: this.$t('project.databaseRules.languageType'), trigger: 'blur' }]
+        languageId: [{ required: true, message: this.$t('project.databaseRules.languageType'), trigger: 'blur' }]
       }
     },
     getList() {
@@ -262,6 +263,16 @@ export default {
         setTimeout(() => {
           this.listLoading = false
         }, 1.5 * 1000)
+      })
+    },
+    getAllDbType() {
+      allDbType().then(res => {
+        this.dbTypeList = res.data
+      })
+    },
+    getLanguageList() {
+      typeLanguageList({}).then(res => {
+        this.languageList = res.data
       })
     },
     handleFilter() {
@@ -301,8 +312,8 @@ export default {
         if (this.database.type === 0) {
           this.database.type = null
         }
-        if (this.database.languageType === 0) {
-          this.database.languageType = null
+        if (this.database.languageId === 0) {
+          this.database.languageId = null
         }
       })
     },

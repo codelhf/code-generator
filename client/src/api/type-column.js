@@ -1,5 +1,12 @@
 import request from '@/utils/request'
 
+export function allDbType() {
+  return request({
+    url: '/typeDb/allDbType',
+    method: 'get'
+  })
+}
+
 export function typeColumnList(params) {
   return request({
     url: '/typeColumn/list',

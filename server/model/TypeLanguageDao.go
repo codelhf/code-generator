@@ -11,7 +11,7 @@ type TypeLanguageDao struct {
 func (d *TypeLanguageDao) List() ([]TypeLanguage, int64) {
 	session := db.Engine.Table("t_type_language")
 	dataList := make([]TypeLanguage, 0)
-	total, err := session.OrderBy("name asc").FindAndCount(&dataList)
+	total, err := session.OrderBy("id asc").FindAndCount(&dataList)
 	util.CheckError(err)
 	return dataList, total
 }

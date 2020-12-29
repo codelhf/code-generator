@@ -11,14 +11,41 @@ import (
 
 var typeColumnDao model.TypeColumnDao
 
+func AllDBType(w http.ResponseWriter, r *http.Request) {
+	dataList := typeColumnDao.AllDBType()
+	common.SuccessData(w, dataList)
+}
+
 func TypeColumnList(w http.ResponseWriter, r *http.Request) {
 	pageInfo := db.BuildPageInfo(r)
-	dbType := util.ParseInt(r.FormValue("dbType"))
+	languageId := r.FormValue("languageId")
+	dbType := util.ParseInt(r.FormValue("dbId"))
 	columnType := r.FormValue("columnType")
-	languageType := util.ParseInt(r.FormValue("languageType"))
 	fieldType := r.FormValue("fieldType")
-	dataList, total := typeColumnDao.List(pageInfo.PageNum, pageInfo.PageSize, dbType, languageType, columnType, fieldType)
-	pageInfo.List = dataList
+	dataList, total := typeColumnDao.List(pageInfo.PageNum, pageInfo.PageSize, languageId, columnType, fieldType, dbType)
+	dbTypeList := typeColumnDao.AllDBType()
+	languageList, _ := typeLanguageDao.List()
+	dataDTOList := make([]model.TypeColumnDTO, 0)
+	for _, typeColumn := range dataList {
+		dataDTO := model.TypeColumnDTO{}
+		dataDTO.Id = typeColumn.Id
+		dataDTO.LanguageId = typeColumn.LanguageId
+		dataDTO.DbType = typeColumn.DbType
+		dataDTO.ColumnType = typeColumn.ColumnType
+		dataDTO.FieldType = typeColumn.FieldType
+		for _, dbType := range dbTypeList {
+			if dataDTO.DbType == dbType.Id {
+				dataDTO.DbName = dbType.Name
+			}
+		}
+		for _, language := range languageList {
+			if dataDTO.LanguageId == language.Id {
+				dataDTO.LanguageName = language.Name
+			}
+		}
+		dataDTOList = append(dataDTOList, dataDTO)
+	}
+	pageInfo.List = dataDTOList
 	pageInfo.Total = total
 	common.SuccessData(w, pageInfo)
 }

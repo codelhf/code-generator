@@ -45,6 +45,9 @@ func GetFuncMap() map[string]interface{} {
 			}
 			return result.String()
 		},
+		"equals": func(str1, str2 string) bool {
+			return strings.EqualFold(str1, str2)
+		},
 		"isTrue": func(str interface{}) bool {
 			switch str.(type) {
 			case string:

@@ -11,14 +11,5 @@ type ProjectDb struct {
 	Username       string `json:"username"`
 	Password       string `json:"password"`
 	DelimitKeyword string `json:"delimitKeyword"`
-	LanguageType   int    `json:"languageType"`
+	LanguageId     string `json:"languageId"`
 }
-
-const (
-	MysqlType      = 1
-	MysqlName      = "mysql"
-	OracleType     = 2
-	OracleName     = "oci8"
-	PostgreSQLType = 3
-	PostgreSQLName = "postgres"
-)

@@ -151,8 +151,8 @@ export default {
     currentTable: {
       domainName: 'ClassName',
       placeholderDomainName: 'Please enter the class name',
-      generateKey: 'PrimaryKey',
-      placeholderGenerateKey: 'Please enter the primary key'
+      domainDesc: 'ClassDesc',
+      placeholderDomainDesc: 'Please enter the class desc'
     },
     button: {
       tableWarning: 'Please select data table',

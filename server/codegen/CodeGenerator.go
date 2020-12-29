@@ -24,7 +24,7 @@ func NewGenerator(projectId string) CodeGenerator {
 
 func (c *CodeGenerator) Generate(tables []model.ProjectTable) string {
 	DbUtil := DbUtil{}
-	DbUtil.TypeList = typeColumnDao.ListAll(c.config.DataSource.Type, c.config.DataSource.LanguageType)
+	DbUtil.TypeList = typeColumnDao.ListAll(c.config.DataSource.Type, c.config.DataSource.LanguageId)
 	customFields := templateFieldDao.CustomField()
 	resultString := ""
 	// 目前支持单表生成

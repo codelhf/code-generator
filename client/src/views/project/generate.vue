@@ -10,8 +10,8 @@
           <el-form-item :label="$t('projectGenerate.currentTable.domainName')">
             <el-input v-model="currentTable.domainName" :placeholder="$t('projectGenerate.currentTable.placeholderDomainName')" />
           </el-form-item>
-          <el-form-item :label="$t('projectGenerate.currentTable.generateKey')">
-            <el-input v-model="currentTable.generateKey" :placeholder="$t('projectGenerate.currentTable.placeholderGenerateKey')" />
+          <el-form-item :label="$t('projectGenerate.currentTable.domainDesc')">
+            <el-input v-model="currentTable.domainDesc" :placeholder="$t('projectGenerate.currentTable.placeholderDomainDesc')" />
           </el-form-item>
           <el-form-item label=" ">
             <el-button type="primary" icon="el-icon-video-play" :loading="loading" @click="handleGenerate">{{ $t('projectGenerate.button.generateCode') }}</el-button>
@@ -47,7 +47,7 @@ export default {
         tableName: '',
         tableType: null,
         domainName: '',
-        generateKey: ''
+        domainDesc: ''
       },
       loading: false,
       generateResult: ''
@@ -83,7 +83,7 @@ export default {
           if (item.tableName === this.currentTable.tableName) {
             item.id = this.currentTable.id
             item.domainName = this.currentTable.domainName
-            item.generateKey = this.currentTable.generateKey
+            item.domainDesc = this.currentTable.domainDesc
             item.active = this.currentTable.active = true
           }
           return item

@@ -151,8 +151,8 @@ export default {
     currentTable: {
       domainName: '类名',
       placeholderDomainName: '请输入类名',
-      generateKey: '主键',
-      placeholderGenerateKey: '请输入主键'
+      domainDesc: '类描述',
+      placeholderDomainDesc: '请输入类描述'
     },
     button: {
       tableWarning: '请选择数据表',
