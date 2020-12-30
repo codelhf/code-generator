@@ -22,6 +22,11 @@ export default {
     langSelect: {
       success: 'Switch Language Success'
     },
+    treeList: {
+      addItem: 'New',
+      updateItem: 'Update',
+      deleteItem: 'Delete'
+    },
     uploadExcel: {
       drag: 'Drop excel file here or',
       browse: 'Browse',
@@ -330,8 +335,6 @@ export default {
       placeholderDbType: 'Please select database type',
       columnType: 'ColumnType',
       placeholderColumnType: 'Please enter the data column type',
-      languageType: 'Language',
-      placeholderLanguageType: 'Please select language',
       fieldType: 'FieldType',
       placeholderFieldType: 'Please enter the field type'
     },
@@ -354,6 +357,19 @@ export default {
       deleteOne: 'Are you sure you want to delete？',
       cancel: 'Cancel',
       confirm: 'Confirm'
+    },
+    language: {
+      addTitle: 'Add Language',
+      editTitle: 'Edit Language',
+      name: 'LanguageName',
+      placeholderName: 'Please enter the language name',
+      desc: 'LanguageDesc',
+      placeholderDesc: 'Please enter the language desc',
+      formCancel: 'Cancel',
+      formConfirm: 'Confirm'
+    },
+    languageRules: {
+      name: 'Language Name cannot be empty'
     },
     item: {
       addTitle: 'Add Column Type',

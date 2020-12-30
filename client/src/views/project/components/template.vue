@@ -1,10 +1,10 @@
 <template>
-  <div style="width: 100%;">
+  <div style="width: 100%; height: calc((100vh - 124px) / 2);">
     <el-table
       :key="tableKey"
       v-loading="listLoading"
       :data="list.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
-      height="320"
+      height="100%"
       highlight-current-row
       border="border"
     >

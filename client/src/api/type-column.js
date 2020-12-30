@@ -23,6 +23,14 @@ export function typeColumnSelect(id) {
   })
 }
 
+export function typeColumnCheck(data) {
+  return request({
+    url: '/typeColumn/check',
+    method: 'post',
+    data
+  })
+}
+
 export function typeColumnInsert(data) {
   return request({
     url: '/typeColumn/insert',

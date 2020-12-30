@@ -19,7 +19,7 @@ func AllDBType(w http.ResponseWriter, r *http.Request) {
 func TypeColumnList(w http.ResponseWriter, r *http.Request) {
 	pageInfo := db.BuildPageInfo(r)
 	languageId := r.FormValue("languageId")
-	dbType := util.ParseInt(r.FormValue("dbId"))
+	dbType := util.ParseInt(r.FormValue("dbType"))
 	columnType := r.FormValue("columnType")
 	fieldType := r.FormValue("fieldType")
 	dataList, total := typeColumnDao.List(pageInfo.PageNum, pageInfo.PageSize, languageId, columnType, fieldType, dbType)
@@ -56,11 +56,26 @@ func TypeColumnSelect(w http.ResponseWriter, r *http.Request) {
 	common.SuccessData(w, data)
 }
 
+func TypeColumnCheck(w http.ResponseWriter, r *http.Request) {
+	temp := model.TypeColumn{}
+	common.Bind(r, &temp)
+	has := typeColumnDao.Check(temp)
+	if has {
+		common.SuccessMsg(w, "TypeColumn Exists")
+		return
+	}
+	common.Success(w)
+}
+
 func TypeColumnInsert(w http.ResponseWriter, r *http.Request) {
 	temp := model.TypeColumn{}
 	common.Bind(r, &temp)
 	row := typeColumnDao.Insert(temp)
-	if !row {
+	if row == -1 {
+		common.FailMsg(w, "TypeColumn Exists")
+		return
+	}
+	if row == 0 {
 		common.FailMsg(w, "Save TypeColumn Failed")
 		return
 	}
@@ -71,7 +86,11 @@ func TypeColumnUpdate(w http.ResponseWriter, r *http.Request) {
 	temp := model.TypeColumn{}
 	common.Bind(r, &temp)
 	row := typeColumnDao.Update(temp.Id, temp)
-	if !row {
+	if row == -1 {
+		common.FailMsg(w, "TypeColumn Exists")
+		return
+	}
+	if row == 0 {
 		common.FailMsg(w, "Update TypeColumn Failed")
 		return
 	}

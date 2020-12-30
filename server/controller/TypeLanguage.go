@@ -24,11 +24,26 @@ func TypeLanguageSelect(w http.ResponseWriter, r *http.Request) {
 	common.SuccessData(w, data)
 }
 
+func TypeLanguageCheck(w http.ResponseWriter, r *http.Request) {
+	temp := model.TypeLanguage{}
+	common.Bind(r, &temp)
+	has := typeLanguageDao.Check(temp.Name)
+	if has {
+		common.SuccessMsg(w, "TypeLanguage Exists")
+		return
+	}
+	common.Success(w)
+}
+
 func TypeLanguageInsert(w http.ResponseWriter, r *http.Request) {
 	temp := model.TypeLanguage{}
 	common.Bind(r, &temp)
 	row := typeLanguageDao.Insert(temp)
-	if !row {
+	if row == -1 {
+		common.FailMsg(w, "TypeLanguage Exists")
+		return
+	}
+	if row == 0 {
 		common.FailMsg(w, "Save TypeLanguage Failed")
 		return
 	}
@@ -39,7 +54,11 @@ func TypeLanguageUpdate(w http.ResponseWriter, r *http.Request) {
 	temp := model.TypeLanguage{}
 	common.Bind(r, &temp)
 	row := typeLanguageDao.Update(temp.Id, temp)
-	if !row {
+	if row == -1 {
+		common.FailMsg(w, "TypeLanguage Exists")
+		return
+	}
+	if row == 0 {
 		common.FailMsg(w, "Update TypeLanguage Failed")
 		return
 	}

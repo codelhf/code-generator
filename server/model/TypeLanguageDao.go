@@ -27,25 +27,42 @@ func (d *TypeLanguageDao) Select(id string) TypeLanguage {
 	return data
 }
 
-func (d *TypeLanguageDao) Insert(typeLanguage TypeLanguage) bool {
+func (d *TypeLanguageDao) Check(name string) bool {
+	session := db.Engine.Table("t_type_language")
+	var data TypeLanguage
+	has, err := session.Where("name = ?", name).Get(&data)
+	util.CheckError(err)
+	return has
+}
+
+func (d *TypeLanguageDao) Insert(typeLanguage TypeLanguage) int64 {
+	if d.Check(typeLanguage.Name) {
+		return -1
+	}
 	session := db.Engine.Table("t_type_language")
 	typeLanguage.Id = db.UUID()
 	affected, err := session.Insert(&typeLanguage)
 	util.CheckError(err)
-	return affected == 1
+	return affected
 }
 
-func (d *TypeLanguageDao) Update(id string, typeLanguage TypeLanguage) bool {
+func (d *TypeLanguageDao) Update(id string, typeLanguage TypeLanguage) int64 {
+	if d.Check(typeLanguage.Name) {
+		return -1
+	}
 	session := db.Engine.Table("t_type_language")
 	affected, err := session.Where("id = ?", id).Update(&typeLanguage)
 	util.CheckError(err)
-	return affected == 1
+	return affected
 }
 
 func (d *TypeLanguageDao) Delete(ids []string) bool {
-	session := db.Engine.Table("t_type_language")
+	session := db.Engine.Table("t_type_column")
+	var typeColumn TypeColumn
+	affected, err := session.In("language_id", ids).Delete(&typeColumn)
+	session = db.Engine.Table("t_type_language")
 	var typeLanguage TypeLanguage
-	affected, err := session.In("id", ids).Delete(&typeLanguage)
+	affected, err = session.In("id", ids).Delete(&typeLanguage)
 	util.CheckError(err)
 	return affected >= 1
 }

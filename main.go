@@ -75,6 +75,7 @@ func HandleRouter() {
 	//typeColumn
 	http.HandleFunc("/typeColumn/list", controller.TypeColumnList)
 	http.HandleFunc("/typeColumn/select", controller.TypeColumnSelect)
+	http.HandleFunc("/typeColumn/check", controller.TypeColumnCheck)
 	http.HandleFunc("/typeColumn/insert", controller.TypeColumnInsert)
 	http.HandleFunc("/typeColumn/update", controller.TypeColumnUpdate)
 	http.HandleFunc("/typeColumn/delete", controller.TypeColumnDelete)
@@ -83,6 +84,7 @@ func HandleRouter() {
 	//typeLanguage
 	http.HandleFunc("/typeLanguage/list", controller.TypeLanguageList)
 	http.HandleFunc("/typeLanguage/select", controller.TypeLanguageSelect)
+	http.HandleFunc("/typeLanguage/check", controller.TypeLanguageCheck)
 	http.HandleFunc("/typeLanguage/insert", controller.TypeLanguageInsert)
 	http.HandleFunc("/typeLanguage/update", controller.TypeLanguageUpdate)
 	http.HandleFunc("/typeLanguage/delete", controller.TypeLanguageDelete)

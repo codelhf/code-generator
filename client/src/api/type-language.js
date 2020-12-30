@@ -16,6 +16,14 @@ export function typeLanguageSelect(id) {
   })
 }
 
+export function typeLanguageCheck(data) {
+  return request({
+    url: '/typeLanguage/check',
+    method: 'post',
+    data
+  })
+}
+
 export function typeLanguageInsert(data) {
   return request({
     url: '/typeLanguage/insert',

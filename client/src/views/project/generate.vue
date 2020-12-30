@@ -1,35 +1,34 @@
 <template>
   <div class="page-container">
-    <el-row>
-      <el-col :span="4">
-        <table-list ref="tableList" :data="tableList" @tableClick="handleTableClick" />
-      </el-col>
-      <el-col :span="20" style="padding-left: 20px;">
-        <template-list ref="templateList" :key="projectId" :project-id="projectId" />
-        <el-form ref="currentTable" v-model="currentTable" :inline="true" label-width="80px" style="margin-top: 20px;">
-          <el-form-item :label="$t('projectGenerate.currentTable.domainName')">
-            <el-input v-model="currentTable.domainName" :placeholder="$t('projectGenerate.currentTable.placeholderDomainName')" />
-          </el-form-item>
-          <el-form-item :label="$t('projectGenerate.currentTable.domainDesc')">
-            <el-input v-model="currentTable.domainDesc" :placeholder="$t('projectGenerate.currentTable.placeholderDomainDesc')" />
-          </el-form-item>
-          <el-form-item label=" ">
-            <el-button type="primary" icon="el-icon-video-play" :loading="loading" @click="handleGenerate">{{ $t('projectGenerate.button.generateCode') }}</el-button>
-            <el-button type="primary" icon="el-icon-plus" @click="handleDetail">{{ $t('projectGenerate.button.addTemplate') }}</el-button>
-          </el-form-item>
-        </el-form>
-        <div style="width: 100%;">
-          <el-input v-model="generateResult" type="textarea" :rows="10" />
-        </div>
-      </el-col>
-    </el-row>
+    <table-list
+      :data="tableList"
+      :show-icon="true"
+      @itemClick="handleTableClick"
+    >
+      <template-list ref="templateList" :key="projectId" :project-id="projectId" />
+      <el-form ref="currentTable" v-model="currentTable" :inline="true" label-width="80px" style="margin-top: 20px;">
+        <el-form-item :label="$t('projectGenerate.currentTable.domainName')">
+          <el-input v-model="currentTable.domainName" :placeholder="$t('projectGenerate.currentTable.placeholderDomainName')" />
+        </el-form-item>
+        <el-form-item :label="$t('projectGenerate.currentTable.domainDesc')">
+          <el-input v-model="currentTable.domainDesc" :placeholder="$t('projectGenerate.currentTable.placeholderDomainDesc')" />
+        </el-form-item>
+        <el-form-item label=" ">
+          <el-button type="primary" icon="el-icon-video-play" :loading="loading" @click="handleGenerate">{{ $t('projectGenerate.button.generateCode') }}</el-button>
+          <el-button type="primary" icon="el-icon-plus" @click="handleDetail">{{ $t('projectGenerate.button.addTemplate') }}</el-button>
+        </el-form-item>
+      </el-form>
+      <div style="width: 100%; height: calc(((100vh - 124px) / 2) - 82px);">
+        <el-input v-model="generateResult" type="textarea" :rows="10" />
+      </div>
+    </table-list>
   </div>
 </template>
 
 <script>
-import { projectLastId } from '../../api/project'
-import { projectTableList, projectTableSelect, projectTableGenerate } from '../../api/project-table'
-import TableList from './components/table'
+import { projectLastId } from '@/api/project'
+import { projectTableList, projectTableSelect, projectTableGenerate } from '@/api/project-table'
+import TableList from '@/components/TreeList'
 import TemplateList from './components/template'
 export default {
   name: 'Home',
@@ -69,6 +68,10 @@ export default {
       const params = { projectId: this.projectId }
       projectTableList(params).then(res => {
         this.tableList = res.data
+        this.tableList.map(item => {
+          item.name = item.tableName
+          item.table = item.tableType === 1
+        })
       })
     },
     handleTableClick(table) {

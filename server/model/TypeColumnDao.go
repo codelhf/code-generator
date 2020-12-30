@@ -65,19 +65,34 @@ func (d *TypeColumnDao) Select(id string) TypeColumn {
 	return data
 }
 
-func (d *TypeColumnDao) Insert(typeColumn TypeColumn) bool {
+func (d *TypeColumnDao) Check(typeColumn TypeColumn) bool {
+	session := db.Engine.Table("t_type_column")
+	var data TypeColumn
+	session.Where("language_id = ? and db_type = ? and column_type = ?", typeColumn.LanguageId, typeColumn.DbType, typeColumn.ColumnType)
+	has, err := session.Get(&data)
+	util.CheckError(err)
+	return has
+}
+
+func (d *TypeColumnDao) Insert(typeColumn TypeColumn) int64 {
+	if d.Check(typeColumn) {
+		return -1
+	}
 	session := db.Engine.Table("t_type_column")
 	typeColumn.Id = db.UUID()
 	affected, err := session.Insert(&typeColumn)
 	util.CheckError(err)
-	return affected == 1
+	return affected
 }
 
-func (d *TypeColumnDao) Update(id string, typeColumn TypeColumn) bool {
+func (d *TypeColumnDao) Update(id string, typeColumn TypeColumn) int64 {
+	if d.Check(typeColumn) {
+		return  -1
+	}
 	session := db.Engine.Table("t_type_column")
 	affected, err := session.Where("id = ?", id).Update(&typeColumn)
 	util.CheckError(err)
-	return affected == 1
+	return affected
 }
 
 func (d *TypeColumnDao) Delete(ids []string) bool {

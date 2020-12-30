@@ -18,9 +18,19 @@ export default {
     closeOthers: '关闭其它',
     closeAll: '关闭所有'
   },
+  system: {
+    message: {
+      exists: '已存在'
+    }
+  },
   components: {
     langSelect: {
       success: '切换语言成功'
+    },
+    treeList: {
+      addItem: '新增',
+      updateItem: '修改',
+      deleteItem: '删除'
     },
     uploadExcel: {
       drag: '将文件拖到此处，或',
@@ -330,8 +340,6 @@ export default {
       placeholderDbType: '请选择数据库类型',
       columnType: '数据列类型',
       placeholderColumnType: '请输入数据列类型',
-      languageType: '语言类型',
-      placeholderLanguageType: '请选择语言类型',
       fieldType: '字段类型',
       placeholderFieldType: '请输入字段类型'
     },
@@ -354,6 +362,19 @@ export default {
       deleteOne: '确认要删除吗？',
       cancel: '取消',
       confirm: '确定'
+    },
+    language: {
+      addTitle: '新增语言',
+      editTitle: '编辑语言',
+      name: '语言名称',
+      placeholderName: '请输入语言名称',
+      desc: '语言描述',
+      placeholderDesc: '请输入语言描述',
+      formCancel: '取消',
+      formConfirm: '确定'
+    },
+    languageRules: {
+      name: '语言名称不能为空'
     },
     item: {
       addTitle: '新增列类型',
