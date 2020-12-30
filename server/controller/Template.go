@@ -50,10 +50,10 @@ func TemplateSelect(w http.ResponseWriter, r *http.Request) {
 	common.SuccessData(w, data)
 }
 
-func TemplateNameExists(w http.ResponseWriter, r *http.Request) {
-	id := r.FormValue("id")
-	name := r.FormValue("name")
-	row := templateDao.NameExists(id, name)
+func TemplateNameCheck(w http.ResponseWriter, r *http.Request) {
+	temp := model.Template{}
+	common.Bind(r, &temp)
+	row := templateDao.Check(temp)
 	if row {
 		common.FailMsg(w, "Template is Exists")
 		return
@@ -62,6 +62,7 @@ func TemplateNameExists(w http.ResponseWriter, r *http.Request) {
 }
 
 func TemplateInsert(w http.ResponseWriter, r *http.Request) {
+	TemplateNameCheck(w, r)
 	temp := model.Template{}
 	common.Bind(r, &temp)
 	row := templateDao.Insert(temp)
@@ -73,6 +74,7 @@ func TemplateInsert(w http.ResponseWriter, r *http.Request) {
 }
 
 func TemplateUpdate(w http.ResponseWriter, r *http.Request) {
+	TemplateNameCheck(w, r)
 	temp := model.Template{}
 	common.Bind(r, &temp)
 	row := templateDao.Update(temp.Id, temp)

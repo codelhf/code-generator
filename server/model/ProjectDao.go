@@ -37,6 +37,18 @@ func (d *ProjectDao) Select(id string) Project {
 	return data
 }
 
+func (d *ProjectDao) Check(project Project) bool {
+	session := db.Engine.Table("t_project")
+	if util.IsNotBlank(project.Id) {
+		session.Where("id != ?", project.Id)
+	}
+	session.Where("name = ?", project.Name)
+	var data Project
+	has, err := session.Get(&data)
+	util.CheckError(err)
+	return has
+}
+
 func (d *ProjectDao) Insert(project Project) bool {
 	session := db.Engine.Table("t_project")
 	project.Id = db.UUID()

@@ -26,7 +26,19 @@ func TemplateFieldSelect(w http.ResponseWriter, r *http.Request) {
 	common.SuccessData(w, data)
 }
 
+func TemplateFieldCheck(w http.ResponseWriter, r *http.Request) {
+	temp := model.TemplateField{}
+	common.Bind(r, &temp)
+	has := templateFieldDao.Check(temp)
+	if has {
+		common.FailMsg(w, "TemplateField Exists")
+		return
+	}
+	common.Success(w)
+}
+
 func TemplateFieldInsert(w http.ResponseWriter, r *http.Request) {
+	TemplateFieldCheck(w, r)
 	temp := model.TemplateField{}
 	common.Bind(r, &temp)
 	row := templateFieldDao.Insert(temp)
@@ -44,6 +56,7 @@ func TemplateFieldUpdate(w http.ResponseWriter, r *http.Request) {
 		common.FailMsg(w, "Can not Update Default TemplateField")
 		return
 	}
+	TemplateFieldCheck(w, r)
 	row := templateFieldDao.Update(temp.Id, temp)
 	if !row {
 		common.FailMsg(w, "Update TemplateField Failed")

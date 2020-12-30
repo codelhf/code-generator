@@ -68,14 +68,11 @@ func TypeColumnCheck(w http.ResponseWriter, r *http.Request) {
 }
 
 func TypeColumnInsert(w http.ResponseWriter, r *http.Request) {
+	TypeColumnCheck(w, r)
 	temp := model.TypeColumn{}
 	common.Bind(r, &temp)
 	row := typeColumnDao.Insert(temp)
-	if row == -1 {
-		common.FailMsg(w, "TypeColumn Exists")
-		return
-	}
-	if row == 0 {
+	if !row {
 		common.FailMsg(w, "Save TypeColumn Failed")
 		return
 	}
@@ -83,14 +80,11 @@ func TypeColumnInsert(w http.ResponseWriter, r *http.Request) {
 }
 
 func TypeColumnUpdate(w http.ResponseWriter, r *http.Request) {
+	TypeColumnCheck(w, r)
 	temp := model.TypeColumn{}
 	common.Bind(r, &temp)
 	row := typeColumnDao.Update(temp.Id, temp)
-	if row == -1 {
-		common.FailMsg(w, "TypeColumn Exists")
-		return
-	}
-	if row == 0 {
+	if !row {
 		common.FailMsg(w, "Update TypeColumn Failed")
 		return
 	}

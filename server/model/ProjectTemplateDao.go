@@ -70,6 +70,16 @@ func (d *ProjectTemplateDao) Select(id string) ProjectTemplate {
 	return data
 }
 
+func (d *ProjectTemplateDao) Check(pTemplate ProjectTemplate) bool {
+	session := db.Engine.Table("t_project_template")
+	session.Where("project_id = ?", pTemplate.ProjectId)
+	session.Where("template_id = ?", pTemplate.TemplateId)
+	var data ProjectTemplate
+	has, err := session.Get(&data)
+	util.CheckError(err)
+	return has
+}
+
 func (d *ProjectTemplateDao) Insert(pTemplate ProjectTemplate) bool {
 	session := db.Engine.Table("t_project_template")
 	pTemplate.Id = db.UUID()

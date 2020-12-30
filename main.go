@@ -33,6 +33,7 @@ func HandleRouter() {
 	//project
 	http.HandleFunc("/project/list", controller.ProjectList)
 	http.HandleFunc("/project/select", controller.ProjectSelect)
+	http.HandleFunc("/project/check", controller.ProjectCheck)
 	http.HandleFunc("/project/insert", controller.ProjectInsert)
 	http.HandleFunc("/project/update", controller.ProjectUpdate)
 	http.HandleFunc("/project/delete", controller.ProjectDelete)
@@ -48,6 +49,7 @@ func HandleRouter() {
 	//projectTemplate
 	http.HandleFunc("/projectTemplate/list", controller.ProjectTemplateList)
 	http.HandleFunc("/projectTemplate/select", controller.ProjectTemplateSelect)
+	http.HandleFunc("/projectTemplate/check", controller.ProjectTemplateCheck)
 	http.HandleFunc("/projectTemplate/insert", controller.ProjectTemplateInsert)
 	http.HandleFunc("/projectTemplate/update", controller.ProjectTemplateUpdate)
 	http.HandleFunc("/projectTemplate/delete", controller.ProjectTemplateDelete)
@@ -56,19 +58,21 @@ func HandleRouter() {
 	http.HandleFunc("/template/export", controller.TemplateExport)
 	http.HandleFunc("/template/dump", controller.TemplateImport)
 	http.HandleFunc("/template/select", controller.TemplateSelect)
-	http.HandleFunc("/template/exists", controller.TemplateNameExists)
+	http.HandleFunc("/template/check", controller.TemplateNameCheck)
 	http.HandleFunc("/template/insert", controller.TemplateInsert)
 	http.HandleFunc("/template/update", controller.TemplateUpdate)
 	http.HandleFunc("/template/delete", controller.TemplateDelete)
 	//templateField
 	http.HandleFunc("/templateField/list", controller.TemplateFieldList)
 	http.HandleFunc("/templateField/select", controller.TemplateFieldSelect)
+	http.HandleFunc("/templateField/check", controller.TemplateFieldCheck)
 	http.HandleFunc("/templateField/insert", controller.TemplateFieldInsert)
 	http.HandleFunc("/templateField/update", controller.TemplateFieldUpdate)
 	http.HandleFunc("/templateField/delete", controller.TemplateFieldDelete)
 	//templateGroup
 	http.HandleFunc("/templateGroup/list", controller.TemplateGroupList)
 	http.HandleFunc("/templateGroup/select", controller.TemplateGroupSelect)
+	http.HandleFunc("/templateGroup/check", controller.TemplateGroupCheck)
 	http.HandleFunc("/templateGroup/insert", controller.TemplateGroupInsert)
 	http.HandleFunc("/templateGroup/update", controller.TemplateGroupUpdate)
 	http.HandleFunc("/templateGroup/delete", controller.TemplateGroupDelete)

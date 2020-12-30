@@ -56,13 +56,15 @@ func (d *TemplateDao) Select(id string) Template {
 	return data
 }
 
-func (d *TemplateDao) NameExists(id, name string) bool {
+func (d *TemplateDao) Check(template Template) bool {
 	session := db.Engine.Table("t_template")
-	if util.IsNotBlank(id) {
-		session.Where("id != ?", id)
+	if util.IsNotBlank(template.Id) {
+		session.Where("id != ?", template.Id)
 	}
+	session.Where("group_id = ?", template.GroupId)
+	session.Where("name = ?", template.Name)
 	var data Template
-	has, err := session.Where("name = ?", name).Get(&data)
+	has, err := session.Get(&data)
 	util.CheckError(err)
 	if !has {
 		return false

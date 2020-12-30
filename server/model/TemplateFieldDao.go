@@ -45,6 +45,18 @@ func (d *TemplateFieldDao) Select(id string) TemplateField {
 	return data
 }
 
+func (d *TemplateFieldDao) Check(templateField TemplateField) bool {
+	session := db.Engine.Table("t_template_field")
+	if util.IsNotBlank(templateField.Id) {
+		session.Where("id != ?", templateField.Id)
+	}
+	session.Where("name = ?", templateField.Name)
+	var data TemplateField
+	has, err := session.Get(&data)
+	util.CheckError(err)
+	return has
+}
+
 func (d *TemplateFieldDao) Insert(templateField TemplateField) bool {
 	session := db.Engine.Table("t_template_field")
 	templateField.Id = db.UUID()

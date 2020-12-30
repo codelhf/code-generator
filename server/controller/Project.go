@@ -29,7 +29,19 @@ func ProjectSelect(w http.ResponseWriter, r *http.Request) {
 	common.SuccessData(w, data)
 }
 
+func ProjectCheck(w http.ResponseWriter, r *http.Request) {
+	temp := model.Project{}
+	common.Bind(r, &temp)
+	has := projectDao.Check(temp)
+	if has {
+		common.FailMsg(w, "Project Exists")
+		return
+	}
+	common.Success(w)
+}
+
 func ProjectInsert(w http.ResponseWriter, r *http.Request) {
+	ProjectCheck(w, r)
 	temp := model.Project{}
 	common.Bind(r, &temp)
 	row := projectDao.Insert(temp)
@@ -41,6 +53,7 @@ func ProjectInsert(w http.ResponseWriter, r *http.Request) {
 }
 
 func ProjectUpdate(w http.ResponseWriter, r *http.Request) {
+	ProjectCheck(w, r)
 	temp := model.Project{}
 	common.Bind(r, &temp)
 	row := projectDao.Update(temp.Id, temp)

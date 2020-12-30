@@ -27,6 +27,18 @@ func (d *TemplateGroupDao) Select(id string) TemplateGroup {
 	return data
 }
 
+func (d *TemplateGroupDao) Check(templateGroup TemplateGroup) bool {
+	session := db.Engine.Table("t_template_group")
+	if util.IsNotBlank(templateGroup.Id) {
+		session.Where("id != ?", templateGroup.Id)
+	}
+	session.Where("name = ?", templateGroup.Name)
+	var data TemplateGroup
+	has, err := session.Get(&data)
+	util.CheckError(err)
+	return has
+}
+
 func (d *TemplateGroupDao) Insert(templateGroup TemplateGroup) bool {
 	session := db.Engine.Table("t_template_group")
 	templateGroup.Id = db.UUID()
