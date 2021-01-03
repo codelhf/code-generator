@@ -68,28 +68,9 @@
     </tree-list>
 
     <el-dialog
-      :title="language.id ? $t('typeColumn.language.editTitle') : $t('typeColumn.language.addTitle')"
-      :visible.sync="dialogFormVisible"
-      @close="handleFormClose('languageForm')"
-    >
-      <el-form ref="languageForm" :model="language" :rules="languageRules()" label-width="120px" label-suffix=":">
-        <el-form-item :label="$t('typeColumn.language.name')" prop="name">
-          <el-input v-model="language.name" :placeholder="$t('typeColumn.language.placeholderName')" @blur="checkLanguage" />
-        </el-form-item>
-        <el-form-item :label="$t('typeColumn.language.desc')" prop="desc">
-          <el-input v-model="language.desc" :placeholder="$t('typeColumn.language.placeholderDesc')" />
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="handleFormClose('languageForm')">{{ $t('typeColumn.language.formCancel') }}</el-button>
-        <el-button type="primary" @click="handleFormSubmit('languageForm')">{{ $t('typeColumn.language.formConfirm') }}</el-button>
-      </span>
-    </el-dialog>
-
-    <el-dialog
       :title="typeColumn.id ? $t('typeColumn.item.editTitle') : $t('typeColumn.item.addTitle')"
-      :visible.sync="dialogFormVisible2"
-      @close="handleForm2Close('typeColumnForm')"
+      :visible.sync="dialogFormVisible"
+      @close="handleFormClose('typeColumnForm')"
     >
       <el-form ref="typeColumnForm" :model="typeColumn" :rules="typeColumnRules()" label-width="120px" label-suffix=":">
         <el-form-item :label="$t('typeColumn.item.languageType')" prop="languageId">
@@ -110,15 +91,34 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="handleForm2Close('typeColumnForm')">{{ $t('typeColumn.item.formCancel') }}</el-button>
-        <el-button type="primary" @click="handleForm2Submit('typeColumnForm')">{{ $t('typeColumn.item.formConfirm') }}</el-button>
+        <el-button @click="handleFormClose('typeColumnForm')">{{ $t('common.form.cancel') }}</el-button>
+        <el-button type="primary" @click="handleFormSubmit('typeColumnForm')">{{ $t('common.form.confirm') }}</el-button>
+      </span>
+    </el-dialog>
+
+    <el-dialog
+      :title="language.id ? $t('typeColumn.language.editTitle') : $t('typeColumn.language.addTitle')"
+      :visible.sync="dialogFormVisible2"
+      @close="handleForm2Close('languageForm')"
+    >
+      <el-form ref="languageForm" :model="language" :rules="languageRules()" label-width="120px" label-suffix=":">
+        <el-form-item :label="$t('typeColumn.language.name')" prop="name">
+          <el-input v-model="language.name" :placeholder="$t('typeColumn.language.placeholderName')" @blur="checkLanguage" />
+        </el-form-item>
+        <el-form-item :label="$t('typeColumn.language.desc')" prop="desc">
+          <el-input v-model="language.desc" :placeholder="$t('typeColumn.language.placeholderDesc')" />
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="handleForm2Close('languageForm')">{{ $t('common.form.cancel') }}</el-button>
+        <el-button type="primary" @click="handleForm2Submit('languageForm')">{{ $t('common.form.confirm') }}</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { typeColumnList, typeColumnSelect, typeColumnCheck, typeColumnInsert, typeColumnUpdate, typeColumnDelete } from '@/api/type-column'
+import {typeColumnList, typeColumnSelect, typeColumnCheck, typeColumnInsert, typeColumnUpdate, typeColumnDelete } from '@/api/type-column'
 import { typeLanguageList, typeLanguageSelect, typeLanguageCheck, typeLanguageInsert, typeLanguageUpdate, typeLanguageDelete } from '@/api/type-language'
 import { allDbType } from '@/api/type-column'
 import Pagination from '@/components/Pagination/index'
@@ -144,22 +144,22 @@ export default {
         columnType: '',
         fieldType: ''
       },
-      dbTypeList: [],
-      languageList: [],
       dialogFormVisible: false,
-      language: {
-        id: '',
-        name: '',
-        desc: ''
-      },
-      dialogFormVisible2: false,
       typeColumn: {
         id: '',
         languageId: '',
         dbType: null,
         columnType: '',
         fieldType: ''
-      }
+      },
+      languageList: [],
+      dialogFormVisible2: false,
+      language: {
+        id: '',
+        name: '',
+        desc: ''
+      },
+      dbTypeList: []
     }
   },
   created() {
@@ -168,11 +168,6 @@ export default {
     this.getAllDbType()
   },
   methods: {
-    languageRules() {
-      return {
-        name: [{ required: true, message: this.$t('typeColumn.languageRules.name'), trigger: 'blur' }]
-      }
-    },
     typeColumnRules() {
       return {
         dbType: [{ required: true, message: this.$t('typeColumn.itemRules.dbType'), trigger: 'blur' }],
@@ -207,6 +202,65 @@ export default {
         fieldType: ''
       }
     },
+    handleDetail(id) {
+      this.dialogFormVisible = true
+      this.typeColumn = {}
+      if (id) {
+        typeColumnSelect(id).then(res => {
+          this.typeColumn = res.data
+          if (this.typeColumn.dbType === 0) {
+            this.typeColumn.dbType = null
+          }
+          if (this.typeColumn.languageId === 0) {
+            this.typeColumn.languageId = null
+          }
+        })
+      }
+    },
+    checkTypeColumn() {
+      typeColumnCheck(this.typeColumn).then(res => {
+        // do nothing
+      }, () => {
+        this.$message.error(this.typeColumn.columnType + this.$t('common.message.exists'))
+      })
+    },
+    handleFormSubmit(formName) {
+      this.$refs[formName].validate(validate => {
+        if (validate) {
+          if (this.typeColumn.id) {
+            typeColumnUpdate(this.typeColumn).then(res => {
+              this.dialogFormVisible = false
+              this.getList()
+            })
+          } else {
+            typeColumnInsert(this.typeColumn).then(res => {
+              this.dialogFormVisible = false
+              this.getList()
+            })
+          }
+        }
+      })
+    },
+    handleFormClose(formName) {
+      this.dialogFormVisible = false
+      this.$refs[formName].resetFields()
+    },
+    handleDelete(id) {
+      this.$confirm(this.$t('common.confirm.deleteOne'), this.$t('common.confirm.title'), {
+        cancelButtonText: this.$t('common.confirm.cancel'),
+        confirmButtonText: this.$t('common.confirm.confirm'),
+        type: 'warning'
+      }).then(() => {
+        typeColumnDelete(id).then(() => {
+          this.getList()
+        })
+      })
+    },
+    languageRules() {
+      return {
+        name: [{ required: true, message: this.$t('typeColumn.languageRules.name'), trigger: 'blur' }]
+      }
+    },
     getLanguageList() {
       typeLanguageList({}).then(res => {
         this.languageList = res.data
@@ -217,11 +271,6 @@ export default {
             item.active = true
           }
         })
-      })
-    },
-    getAllDbType() {
-      allDbType().then(res => {
-        this.dbTypeList = res.data
       })
     },
     handleItemClick(item) {
@@ -236,7 +285,7 @@ export default {
       })
     },
     handleLanguage(item) {
-      this.dialogFormVisible = true
+      this.dialogFormVisible2 = true
       this.language = {}
       if (item && item.id) {
         typeLanguageSelect(item.id).then(res => {
@@ -244,22 +293,25 @@ export default {
         })
       }
     },
-    handleFormClose(formName) {
-      this.dialogFormVisible = false
-      this.$refs[formName].resetFields()
+    checkLanguage() {
+      typeLanguageCheck(this.language).then(res => {
+        // do nothing
+      }, () => {
+        this.$message.error(this.language.name + this.$t('common.message.exists'))
+      })
     },
-    handleFormSubmit(formName) {
+    handleForm2Submit(formName) {
       this.$refs[formName].validate(validate => {
         if (validate) {
           if (this.language.id) {
             typeLanguageUpdate(this.language).then(res => {
-              this.dialogFormVisible = false
+              this.dialogFormVisible2 = false
               this.getList()
               this.getLanguageList()
             })
           } else {
             typeLanguageInsert(this.language).then(res => {
-              this.dialogFormVisible = false
+              this.dialogFormVisible2 = false
               this.getList()
               this.getLanguageList()
             })
@@ -267,20 +319,14 @@ export default {
         }
       })
     },
-    checkLanguage() {
-      typeLanguageCheck(this.language).then(res => {
-        if (res && res.msg) {
-          this.$message({
-            message: this.language.name + this.$t('system.message.exists'),
-            type: 'error'
-          })
-        }
-      })
+    handleForm2Close(formName) {
+      this.dialogFormVisible2 = false
+      this.$refs[formName].resetFields()
     },
     handleLanguageDelete(item) {
-      this.$confirm(this.$t('typeColumn.confirm.deleteOne'), this.$t('typeColumn.confirm.title'), {
-        cancelButtonText: this.$t('typeColumn.confirm.cancel'),
-        confirmButtonText: this.$t('typeColumn.confirm.confirm'),
+      this.$confirm(this.$t('common.confirm.deleteOne'), this.$t('common.confirm.title'), {
+        cancelButtonText: this.$t('common.confirm.cancel'),
+        confirmButtonText: this.$t('common.confirm.confirm'),
         type: 'warning'
       }).then(() => {
         typeLanguageDelete(item.id).then(() => {
@@ -289,61 +335,9 @@ export default {
         })
       })
     },
-    handleDetail(id) {
-      this.dialogFormVisible2 = true
-      this.typeColumn = {}
-      if (id) {
-        typeColumnSelect(id).then(res => {
-          this.typeColumn = res.data
-          if (this.typeColumn.dbType === 0) {
-            this.typeColumn.dbType = null
-          }
-          if (this.typeColumn.languageId === 0) {
-            this.typeColumn.languageId = null
-          }
-        })
-      }
-    },
-    handleForm2Close(formName) {
-      this.dialogFormVisible2 = false
-      this.$refs[formName].resetFields()
-    },
-    handleForm2Submit(formName) {
-      this.$refs[formName].validate(validate => {
-        if (validate) {
-          if (this.typeColumn.id) {
-            typeColumnUpdate(this.typeColumn).then(res => {
-              this.dialogFormVisible2 = false
-              this.getList()
-            })
-          } else {
-            typeColumnInsert(this.typeColumn).then(res => {
-              this.dialogFormVisible2 = false
-              this.getList()
-            })
-          }
-        }
-      })
-    },
-    checkTypeColumn() {
-      typeColumnCheck(this.typeColumn).then(res => {
-        if (res && res.msg) {
-          this.$message({
-            message: this.typeColumn.columnType + this.$t('system.message.exists'),
-            type: 'error'
-          })
-        }
-      })
-    },
-    handleDelete(id) {
-      this.$confirm(this.$t('typeColumn.confirm.deleteOne'), this.$t('typeColumn.confirm.title'), {
-        cancelButtonText: this.$t('typeColumn.confirm.cancel'),
-        confirmButtonText: this.$t('typeColumn.confirm.confirm'),
-        type: 'warning'
-      }).then(() => {
-        typeColumnDelete(id).then(() => {
-          this.getList()
-        })
+    getAllDbType() {
+      allDbType().then(res => {
+        this.dbTypeList = res.data
       })
     }
   }

@@ -4,6 +4,7 @@ import (
 	"code-generator-go/server/common"
 	"code-generator-go/server/db"
 	"code-generator-go/server/model"
+	"code-generator-go/server/util"
 	"net/http"
 	"strings"
 )
@@ -14,7 +15,8 @@ func TemplateFieldList(w http.ResponseWriter, r *http.Request) {
 	pageInfo := db.BuildPageInfo(r)
 	name := r.FormValue("name")
 	desc := r.FormValue("desc")
-	dataList, total := templateFieldDao.List(pageInfo.PageNum, pageInfo.PageSize, name, desc)
+	Type := util.ParseInt(r.FormValue("type"))
+	dataList, total := templateFieldDao.List(pageInfo.PageNum, pageInfo.PageSize, name, desc, Type)
 	pageInfo.List = dataList
 	pageInfo.Total = total
 	common.SuccessData(w, pageInfo)
@@ -29,18 +31,27 @@ func TemplateFieldSelect(w http.ResponseWriter, r *http.Request) {
 func TemplateFieldCheck(w http.ResponseWriter, r *http.Request) {
 	temp := model.TemplateField{}
 	common.Bind(r, &temp)
-	has := templateFieldDao.Check(temp)
-	if has {
-		common.FailMsg(w, "TemplateField Exists")
+	if !templateFieldCheck(w, temp) {
 		return
 	}
 	common.Success(w)
 }
 
+func templateFieldCheck(w http.ResponseWriter, temp model.TemplateField) bool {
+	has := templateFieldDao.Check(temp)
+	if has {
+		common.FailMsg(w, "TemplateField Exists")
+		return false
+	}
+	return true
+}
+
 func TemplateFieldInsert(w http.ResponseWriter, r *http.Request) {
-	TemplateFieldCheck(w, r)
 	temp := model.TemplateField{}
 	common.Bind(r, &temp)
+	if !templateFieldCheck(w, temp) {
+		return
+	}
 	row := templateFieldDao.Insert(temp)
 	if !row {
 		common.FailMsg(w, "Save TemplateField Failed")
@@ -56,7 +67,9 @@ func TemplateFieldUpdate(w http.ResponseWriter, r *http.Request) {
 		common.FailMsg(w, "Can not Update Default TemplateField")
 		return
 	}
-	TemplateFieldCheck(w, r)
+	if !templateFieldCheck(w, temp) {
+		return
+	}
 	row := templateFieldDao.Update(temp.Id, temp)
 	if !row {
 		common.FailMsg(w, "Update TemplateField Failed")

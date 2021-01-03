@@ -28,18 +28,27 @@ func ProjectTemplateSelect(w http.ResponseWriter, r *http.Request) {
 func ProjectTemplateCheck(w http.ResponseWriter, r *http.Request) {
 	temp := model.ProjectTemplate{}
 	common.Bind(r, &temp)
-	has := projectTemplateDao.Check(temp)
-	if has {
-		common.FailMsg(w, "ProjectTemplate Exists")
+	if !projectTemplateCheck(w, temp) {
 		return
 	}
 	common.Success(w)
 }
 
+func projectTemplateCheck(w http.ResponseWriter, temp model.ProjectTemplate) bool {
+	has := projectTemplateDao.Check(temp)
+	if has {
+		common.FailMsg(w, "ProjectTemplate Exists")
+		return false
+	}
+	return true
+}
+
 func ProjectTemplateInsert(w http.ResponseWriter, r *http.Request) {
-	ProjectTemplateCheck(w, r)
 	temp := model.ProjectTemplate{}
 	common.Bind(r, &temp)
+	if !projectTemplateCheck(w, temp) {
+		return
+	}
 	row := projectTemplateDao.Insert(temp)
 	if !row {
 		common.FailMsg(w, "Save ProjectTemplate Failed")
@@ -49,9 +58,11 @@ func ProjectTemplateInsert(w http.ResponseWriter, r *http.Request) {
 }
 
 func ProjectTemplateUpdate(w http.ResponseWriter, r *http.Request) {
-	ProjectTemplateCheck(w, r)
 	temp := model.ProjectTemplate{}
 	common.Bind(r, &temp)
+	if !projectTemplateCheck(w, temp) {
+		return
+	}
 	row := projectTemplateDao.Update(temp.Id, temp)
 	if !row {
 		common.FailMsg(w, "Update ProjectTemplate Failed")

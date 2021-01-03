@@ -16,6 +16,14 @@ export function templateFieldSelect(id) {
   })
 }
 
+export function templateFieldCheck(data) {
+  return request({
+    url: '/templateField/check',
+    method: 'post',
+    data
+  })
+}
+
 export function templateFieldInsert(data) {
   return request({
     url: '/templateField/insert',

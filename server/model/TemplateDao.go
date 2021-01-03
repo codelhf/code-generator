@@ -9,10 +9,13 @@ type TemplateDao struct {
 }
 
 //对所有项目起作用
-func (d *TemplateDao) List(pageNum, pageSize int, name, desc string) ([]Template, int64) {
+func (d *TemplateDao) List(pageNum, pageSize int, groupId, name, desc string) ([]Template, int64) {
 	session := db.Engine.Table("t_template")
 	if pageNum > 0 && pageSize > 0 {
 		session.Limit(pageSize, db.GetOffset(pageNum, pageSize))
+	}
+	if util.IsNotBlank(groupId) {
+		session.Where("group_id = ?", groupId)
 	}
 	if util.IsNotBlank(name) {
 		session.Where("name like ?", "%"+name+"%")
@@ -66,10 +69,7 @@ func (d *TemplateDao) Check(template Template) bool {
 	var data Template
 	has, err := session.Get(&data)
 	util.CheckError(err)
-	if !has {
-		return false
-	}
-	return true
+	return has
 }
 
 func (d *TemplateDao) Insert(template Template) bool {

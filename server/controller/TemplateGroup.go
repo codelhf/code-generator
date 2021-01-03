@@ -27,18 +27,27 @@ func TemplateGroupSelect(w http.ResponseWriter, r *http.Request) {
 func TemplateGroupCheck(w http.ResponseWriter, r *http.Request) {
 	temp := model.TemplateGroup{}
 	common.Bind(r, &temp)
-	has := templateGroupDao.Check(temp)
-	if has {
-		common.FailMsg(w, "TemplateGroup Exists")
+	if !templateGroupCheck(w, temp) {
 		return
 	}
 	common.Success(w)
 }
 
+func templateGroupCheck(w http.ResponseWriter, temp model.TemplateGroup) bool {
+	has := templateGroupDao.Check(temp)
+	if has {
+		common.FailMsg(w, "TemplateGroup Exists")
+		return false
+	}
+	return true
+}
+
 func TemplateGroupInsert(w http.ResponseWriter, r *http.Request) {
-	TemplateGroupCheck(w, r)
 	temp := model.TemplateGroup{}
 	common.Bind(r, &temp)
+	if !templateGroupCheck(w, temp) {
+		return
+	}
 	row := templateGroupDao.Insert(temp)
 	if !row {
 		common.FailMsg(w, "Save TemplateGroup Failed")
@@ -48,9 +57,11 @@ func TemplateGroupInsert(w http.ResponseWriter, r *http.Request) {
 }
 
 func TemplateGroupUpdate(w http.ResponseWriter, r *http.Request) {
-	TemplateGroupCheck(w, r)
 	temp := model.TemplateGroup{}
 	common.Bind(r, &temp)
+	if !templateGroupCheck(w, temp) {
+		return
+	}
 	row := templateGroupDao.Update(temp.Id, temp)
 	if !row {
 		common.FailMsg(w, "Update TemplateGroup Failed")

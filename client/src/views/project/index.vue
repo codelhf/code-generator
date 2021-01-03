@@ -11,9 +11,9 @@
       </el-row>
       <el-row style="text-align: center">
         <el-form-item>
-          <el-button type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('project.listButton.search') }}</el-button>
-          <el-button type="primary" icon="el-icon-refresh" @click="handleReset">{{ $t('project.listButton.reset') }}</el-button>
-          <el-button type="primary" icon="el-icon-plus" @click="handleDetail()">{{ $t('project.listButton.add') }}</el-button>
+          <el-button type="primary" size="mini" icon="el-icon-search" @click="handleFilter">{{ $t('project.listButton.search') }}</el-button>
+          <el-button type="primary" size="mini" icon="el-icon-refresh" @click="handleReset">{{ $t('project.listButton.reset') }}</el-button>
+          <el-button type="primary" size="mini" icon="el-icon-plus" @click="handleDetail()">{{ $t('project.listButton.add') }}</el-button>
         </el-form-item>
       </el-row>
     </el-form>
@@ -45,12 +45,12 @@
           <span>{{ scope.row.uteTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('project.table.operation')" align="center" width="400">
+      <el-table-column :label="$t('project.table.operation')" align="center">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handleRun(scope.row.id)">{{ $t('project.table.run') }}</el-button>
-          <el-button type="primary" size="mini" @click="handleDetail(scope.row.id)">{{ $t('project.table.edit') }}</el-button>
-          <el-button type="primary" size="mini" @click="handleDatabase(scope.row.id)">{{ $t('project.table.database') }}</el-button>
-          <el-button type="warning" size="mini" @click="handleDelete(scope.row.id)">{{ $t('project.table.delete') }}</el-button>
+          <el-button circle size="mini" icon="el-icon-position" @click="handleRun(scope.row.id)" />
+          <el-button circle size="mini" icon="el-icon-edit" @click="handleDetail(scope.row.id)" />
+          <el-button circle size="mini" icon="el-icon-coin" @click="handleDatabase(scope.row.id)" />
+          <el-button circle size="mini" icon="el-icon-delete" @click="handleDelete(scope.row.id)" />
         </template>
       </el-table-column>
     </el-table>
@@ -95,8 +95,8 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="handleFormClose('projectForm')">{{ $t('project.item.formCancel') }}</el-button>
-        <el-button type="primary" @click="handleFormSubmit('projectForm')">{{ $t('project.item.formConfirm') }}</el-button>
+        <el-button @click="handleFormClose('projectForm')">{{ $t('common.form.cancel') }}</el-button>
+        <el-button type="primary" @click="handleFormSubmit('projectForm')">{{ $t('common.form.confirm') }}</el-button>
       </span>
     </el-dialog>
 
@@ -160,8 +160,8 @@
         </el-row>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="handleForm2Close('databaseForm')">{{ $t('project.database.formCancel') }}</el-button>
-        <el-button type="primary" @click="handleForm2Submit('databaseForm')">{{ $t('project.database.formConfirm') }}</el-button>
+        <el-button @click="handleForm2Close('databaseForm')">{{ $t('common.form.cancel') }}</el-button>
+        <el-button type="primary" @click="handleForm2Submit('databaseForm')">{{ $t('common.form.confirm') }}</el-button>
       </span>
     </el-dialog>
   </div>
@@ -372,9 +372,9 @@ export default {
       this.database = database
     },
     handleDelete(id) {
-      this.$confirm(this.$t('project.confirm.deleteOne'), this.$t('project.confirm.title'), {
-        cancelButtonText: this.$t('project.confirm.cancel'),
-        confirmButtonText: this.$t('project.confirm.confirm'),
+      this.$confirm(this.$t('common.confirm.deleteOne'), this.$t('common.confirm.title'), {
+        cancelButtonText: this.$t('common.confirm.cancel'),
+        confirmButtonText: this.$t('common.confirm.confirm'),
         type: 'warning'
       }).then(() => {
         projectDelete(id).then(() => {

@@ -18,6 +18,21 @@ export default {
     closeOthers: 'Close Other',
     closeAll: 'Close All'
   },
+  common: {
+    message: {
+      exists: 'existed'
+    },
+    confirm: {
+      title: 'prompt',
+      deleteOne: 'Are you sure you want to delete？',
+      cancel: 'Cancel',
+      confirm: 'Confirm'
+    },
+    form: {
+      cancel: 'Cancel',
+      confirm: 'Confirm'
+    }
+  },
   components: {
     langSelect: {
       success: 'Switch Language Success'
@@ -58,27 +73,17 @@ export default {
     listButton: {
       search: 'Search',
       reset: 'Reset',
-      add: 'Add Project'
+      add: 'New Project'
     },
     table: {
       name: 'ProjectName',
       desc: 'ProjectDesc',
       cteTime: 'CreateTime',
       uteTime: 'UpdateTime',
-      operation: 'Operate',
-      run: 'GenerateCode',
-      edit: 'Edit',
-      database: 'Database',
-      delete: 'Delete'
-    },
-    confirm: {
-      title: 'Prompt',
-      deleteOne: 'Are you sure you want to delete？',
-      cancel: 'Cancel',
-      confirm: 'Confirm'
+      operation: 'Operate'
     },
     item: {
-      addTitle: 'Add Project',
+      addTitle: 'New Project',
       editTitle: 'Edit Project',
       name: 'ProjectName',
       placeholderName: 'Please enter the project name',
@@ -95,11 +100,9 @@ export default {
       httpPrefix: 'ApiPrefix',
       placeholderHttpPrefix: 'Please enter the api prefix',
       generateRemark: 'CodeRemark',
-      placeholderGenerateRemark: 'Please choose whether to generate code remark',
+      placeholderGenerateRemark: 'Please select whether to generate code remark',
       generateRemark1: 'Yes',
-      generateRemark2: 'No',
-      formCancel: 'Cancel',
-      formConfirm: 'Confirm'
+      generateRemark2: 'No'
     },
     itemRules: {
       name: 'Project name cannot be empty',
@@ -109,15 +112,12 @@ export default {
       dateFormat: 'Date format cannot be empty',
       fileEncode: 'File encoding cannot be empty',
       httpPrefix: 'Api prefix cannot be empty',
-      generateRemark: 'Please choose whether to generate code comments'
+      generateRemark: 'Please select whether to generate code comments'
     },
     database: {
-      addTitle: 'Add Database',
+      addTitle: 'New Database',
       editTitle: 'Edit Database',
       type: 'Type',
-      type1: 'MySQL',
-      type2: 'Oracle',
-      type3: 'PostgreSQL',
       placeholderType: 'Please select database type',
       host: 'Host',
       placeholderHost: 'Please enter the database host',
@@ -132,13 +132,7 @@ export default {
       delimitKeyword: 'Keyword',
       placeholderDelimitKeyword: 'Please enter the keyword processing characters',
       languageType: 'Language',
-      languageType1: 'Java',
-      languageType2: 'Python',
-      languageType3: 'Go',
-      languageType4: 'Rust',
-      placeholderLanguageType: 'Select backend language type',
-      formCancel: 'Cancel',
-      formConfirm: 'Confirm'
+      placeholderLanguageType: 'Select backend language type'
     },
     databaseRules: {
       type: 'Please select database type',
@@ -163,7 +157,7 @@ export default {
       tableWarning: 'Please select data table',
       templateWarning: 'Please add a template',
       generateCode: 'Generate Code',
-      addTemplate: 'Add Template'
+      addTemplate: 'New Template'
     }
   },
   projectTemplate: {
@@ -174,25 +168,19 @@ export default {
       fileSuffix: 'FileSuffix',
       isGenerate: 'IsGenerate',
       isOverride: 'IsOverride',
-      operation: 'Please enter keywords to search',
-      edit: 'Edit',
-      delete: 'Delete'
+      operation: 'Please enter keywords to search'
     },
     switch: {
       activeText: 'Yes',
       inactiveText: 'No'
     },
-    confirm: {
-      title: 'Prompt',
-      deleteOne: 'Are you sure you want to delete？',
-      cancel: 'Cancel',
-      confirm: 'Confirm'
-    },
     item: {
-      addTitle: 'Add template configuration',
+      addTitle: 'New template configuration',
       editTitle: 'Edit template configuration',
+      groupId: 'TemplateGroup',
+      placeholderGroup: 'Please select the template group',
       templateId: 'Template',
-      placeholderName: 'Please enter the template name',
+      placeholderName: 'Please select the template name',
       directory: 'Directory',
       placeholderDirectory: 'Please enter the code directory',
       packageName: 'PackageName',
@@ -200,20 +188,19 @@ export default {
       fileSuffix: 'FileSuffix',
       placeholderFileSuffix: 'Please enter the file suffix xxController or xx/directory/filename',
       isGenerate: 'IsGenerate',
-      placeholderIsGenerate: 'Please choose whether to generate code',
+      placeholderIsGenerate: 'Please select whether to generate code',
       isOverride: 'IsOverride',
-      placeholderIsOverride: 'Please choose whether to rewrite the code',
-      formCancel: 'Cancel',
-      formConfirm: 'Confirm'
+      placeholderIsOverride: 'Please select whether to rewrite the code'
     },
     itemRules: {
       projectId: 'not operate with a project',
+      groupId: 'Template group cannot be empty',
       templateId: 'Template cannot be empty',
       directory: 'Code directory cannot be empty',
       packageName: 'Code package name cannot be empty',
       fileSuffix: 'Class name suffix cannot be empty',
-      isGenerate: 'Please choose whether to generate code',
-      isOverride: 'Please choose whether to rewrite the code'
+      isGenerate: 'Please select whether to generate code',
+      isOverride: 'Please select whether to rewrite the code'
     }
   },
   template: {
@@ -226,7 +213,7 @@ export default {
     listButton: {
       search: 'Search',
       reset: 'Reset',
-      add: 'Add Template',
+      add: 'New Template',
       import: 'Import',
       export: 'Export'
     },
@@ -244,42 +231,45 @@ export default {
       type3: 'Method Template',
       fileType: 'FileType',
       template: 'Template',
-      operation: 'Operate',
-      edit: 'Edit',
-      delete: 'Delete'
-    },
-    confirm: {
-      title: 'Prompt',
-      deleteOne: 'Are you sure you want to delete？',
-      cancel: 'Cancel',
-      confirm: 'Confirm'
+      operation: 'Operate'
     },
     item: {
-      addTitle: 'Add Template',
+      addTitle: 'New Template',
       editTitle: 'Edit Template',
-      name: 'TemplateName',
-      placeholderName: 'Please enter the English name of the template',
-      desc: 'TemplateDesc',
-      placeholderDesc: 'Please enter a template description',
+      group: 'TemplateGroup',
+      placeholderGroup: 'Please select a template group',
       type: 'TemplateType',
       type1: 'Table Template',
       type2: 'Common Template',
       type3: 'Method Template',
       placeholderType: 'Please select template type',
+      name: 'TemplateName',
+      placeholderName: 'Please enter the English name of the template',
+      desc: 'TemplateDesc',
+      placeholderDesc: 'Please enter a template description',
       fileType: 'FileType',
       placeholderFileType: 'Please enter the type of generated file',
       template: 'Template',
-      placeholderTemplate: 'Please enter the template content',
-      formCancel: 'Cancel',
-      formConfirm: 'Confirm'
+      placeholderTemplate: 'Please enter the template content'
     },
     itemRules: {
-      name: 'The template name is in English and cannot be empty',
-      exists: 'Template name already exists',
-      desc: 'Template description cannot be empty',
+      group: 'Please select a template group',
       type: 'Please select template type',
+      name: 'The template name is in English and cannot be empty',
+      desc: 'Template description cannot be empty',
       fileType: 'Please enter the type of generated file',
       template: 'Template content cannot be empty'
+    },
+    group: {
+      addTitle: 'New template grouping',
+      editTitle: 'Edit template grouping',
+      name: 'GroupName',
+      placeholderName: 'Please enter a group name',
+      desc: 'GroupDesc',
+      placeholderDesc: 'Please enter a group description'
+    },
+    groupRules: {
+      name: 'Template group name cannot be empty'
     }
   },
   templateField: {
@@ -292,7 +282,7 @@ export default {
     listButton: {
       search: 'Search',
       reset: 'Reset',
-      add: 'Add Template Field'
+      add: 'New Template Field'
     },
     table: {
       name: 'FieldName',
@@ -301,27 +291,17 @@ export default {
       type1: 'Default field',
       type2: 'Custom field',
       value: 'FieldValue',
-      operation: 'Operate',
-      edit: 'Edit',
-      delete: 'Delete'
-    },
-    confirm: {
-      title: 'Prompt',
-      deleteOne: 'Are you sure you want to delete？',
-      cancel: 'Cancel',
-      confirm: 'Confirm'
+      operation: 'Operate'
     },
     item: {
-      addTitle: 'Add Template Field',
+      addTitle: 'New Template Field',
       editTitle: 'Edit Template Field',
       name: 'FieldName',
       placeholderName: 'Please enter the field name',
       desc: 'FieldDesc',
       placeholderDesc: 'Please enter a field description',
       value: 'FieldValue',
-      placeholderValue: 'Please enter field value',
-      formCancel: 'Cancel',
-      formConfirm: 'Confirm'
+      placeholderValue: 'Please enter field value'
     },
     itemRules: {
       name: 'Field name cannot be empty',
@@ -341,55 +321,42 @@ export default {
     listButton: {
       search: 'Search',
       reset: 'Reset',
-      add: 'Add Field Mapping'
+      add: 'New Field Mapping'
     },
     table: {
       dbType: 'Database',
       columnType: 'ColumnType',
-      languageType: 'Language',
       fieldType: 'FieldType',
-      operation: 'Operate',
-      edit: 'Edit',
-      delete: 'Delete'
-    },
-    confirm: {
-      title: 'Prompt',
-      deleteOne: 'Are you sure you want to delete？',
-      cancel: 'Cancel',
-      confirm: 'Confirm'
-    },
-    language: {
-      addTitle: 'Add Language',
-      editTitle: 'Edit Language',
-      name: 'LanguageName',
-      placeholderName: 'Please enter the language name',
-      desc: 'LanguageDesc',
-      placeholderDesc: 'Please enter the language desc',
-      formCancel: 'Cancel',
-      formConfirm: 'Confirm'
-    },
-    languageRules: {
-      name: 'Language Name cannot be empty'
+      operation: 'Operate'
     },
     item: {
-      addTitle: 'Add Column Type',
+      addTitle: 'New Column Type',
       editTitle: 'Edit Column Type',
+      languageType: 'Language',
+      placeholderLanguageType: 'Please select language type',
       dbType: 'Database',
       placeholderDbType: 'Please select database type',
       columnType: 'ColumnType',
       placeholderColumnType: 'Please enter the data column type',
-      languageType: 'Language',
-      placeholderLanguageType: 'Please choose language type',
       fieldType: 'FieldType',
-      placeholderFieldType: 'Please enter the field type',
-      formCancel: 'Cancel',
-      formConfirm: 'Confirm'
+      placeholderFieldType: 'Please enter the field type'
     },
     itemRules: {
+      languageType: 'Language type cannot be empty',
       dbType: 'Please select database type',
       columnType: 'Data column type cannot be empty',
-      languageType: 'Language type cannot be empty',
       fieldType: 'Field type cannot be empty'
+    },
+    language: {
+      addTitle: 'New Language',
+      editTitle: 'Edit Language',
+      name: 'LanguageName',
+      placeholderName: 'Please enter the language name',
+      desc: 'LanguageDesc',
+      placeholderDesc: 'Please enter the language desc'
+    },
+    languageRules: {
+      name: 'Language Name cannot be empty'
     }
   }
 }

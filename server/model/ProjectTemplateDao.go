@@ -40,6 +40,7 @@ func toDTO(dataList []ProjectTemplate, templateList []Template) []ProjectTemplat
 		dto := ProjectTemplateDTO{}
 		dto.Id = data.Id
 		dto.ProjectId = data.ProjectId
+		dto.GroupId = data.GroupId
 		dto.TemplateId = data.TemplateId
 		dto.Directory = data.Directory
 		dto.PackageName = data.PackageName

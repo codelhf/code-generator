@@ -13,9 +13,10 @@ var templateDao model.TemplateDao
 
 func TemplateList(w http.ResponseWriter, r *http.Request) {
 	pageInfo := db.BuildPageInfo(r)
+	groupId := r.FormValue("groupId")
 	name := r.FormValue("name")
 	desc := r.FormValue("desc")
-	dataList, total := templateDao.List(pageInfo.PageNum, pageInfo.PageSize, name, desc)
+	dataList, total := templateDao.List(pageInfo.PageNum, pageInfo.PageSize, groupId, name, desc)
 	pageInfo.List = dataList
 	pageInfo.Total = total
 	common.SuccessData(w, pageInfo)
@@ -53,18 +54,27 @@ func TemplateSelect(w http.ResponseWriter, r *http.Request) {
 func TemplateNameCheck(w http.ResponseWriter, r *http.Request) {
 	temp := model.Template{}
 	common.Bind(r, &temp)
+	if !templateCheck(w, temp) {
+		return
+	}
+	common.Success(w)
+}
+
+func templateCheck(w http.ResponseWriter, temp model.Template) bool {
 	row := templateDao.Check(temp)
 	if row {
 		common.FailMsg(w, "Template is Exists")
-		return
+		return false
 	}
-	common.SuccessMsg(w, "")
+	return true
 }
 
 func TemplateInsert(w http.ResponseWriter, r *http.Request) {
-	TemplateNameCheck(w, r)
 	temp := model.Template{}
 	common.Bind(r, &temp)
+	if !templateCheck(w, temp) {
+		return
+	}
 	row := templateDao.Insert(temp)
 	if !row {
 		common.FailMsg(w, "Save Template Failed")
@@ -74,9 +84,11 @@ func TemplateInsert(w http.ResponseWriter, r *http.Request) {
 }
 
 func TemplateUpdate(w http.ResponseWriter, r *http.Request) {
-	TemplateNameCheck(w, r)
 	temp := model.Template{}
 	common.Bind(r, &temp)
+	if !templateCheck(w, temp) {
+		return
+	}
 	row := templateDao.Update(temp.Id, temp)
 	if !row {
 		common.FailMsg(w, "Update Template Failed")

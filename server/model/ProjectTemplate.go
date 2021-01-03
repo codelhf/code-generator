@@ -3,6 +3,7 @@ package model
 type ProjectTemplate struct {
 	Id          string `json:"id"`
 	ProjectId   string `json:"projectId"`
+	GroupId     string `json:"groupId"`
 	TemplateId  string `json:"templateId"`
 	Directory   string `json:"directory"`
 	PackageName string `json:"packageName"`
@@ -14,6 +15,7 @@ type ProjectTemplate struct {
 type ProjectTemplateDTO struct {
 	Id          string `json:"id"`
 	ProjectId   string `json:"projectId"`
+	GroupId     string `json:"groupId"`
 	TemplateId  string `json:"templateId"`
 	Directory   string `json:"directory"`
 	PackageName string `json:"packageName"`

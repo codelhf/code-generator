@@ -17,7 +17,7 @@ func (d *TemplateFieldDao) CustomField() []TemplateField {
 	return dataList
 }
 
-func (d *TemplateFieldDao) List(pageNum, pageSize int, name, desc string) ([]TemplateField, int64) {
+func (d *TemplateFieldDao) List(pageNum, pageSize int, name, desc string, Type int) ([]TemplateField, int64) {
 	session := db.Engine.Table("t_template_field")
 	if pageNum > 0 && pageSize > 0 {
 		session.Limit(pageSize, db.GetOffset(pageNum, pageSize))
@@ -27,6 +27,9 @@ func (d *TemplateFieldDao) List(pageNum, pageSize int, name, desc string) ([]Tem
 	}
 	if util.IsNotBlank(desc) {
 		session.Where("desc like ?", "%"+desc+"%")
+	}
+	if Type > 0 {
+		session.Where("type = ?", Type)
 	}
 	dataList := make([]TemplateField, 0)
 	total, err := session.OrderBy("type asc").FindAndCount(&dataList)

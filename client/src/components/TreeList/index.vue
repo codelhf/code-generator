@@ -37,7 +37,7 @@
 
 <script>
 export default {
-  name: 'DataSourceTable',
+  name: 'TreeList',
   props: {
     data: {
       type: Array,
@@ -65,7 +65,7 @@ export default {
     }
   },
   watch: {
-    data: function() {
+    data() {
       this.filterTable()
     }
   },
@@ -137,15 +137,15 @@ export default {
         .right-menu {
           position: fixed;
           width: 80px;
-          height: 92px;
-          border: 1px solid #bfcbd9;
+          height: 90px;
           z-index: 999;
           .menu {
             display: inline-block;
             padding: 0 10px;
             width: 100%;
-            height: 30px;
-            line-height: 30px;
+            height: 28px;
+            line-height: 28px;
+            border: 1px solid #bfcbd9;
             background-color: #ffffff;
           }
           .menu:hover {

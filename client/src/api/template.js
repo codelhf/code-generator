@@ -33,9 +33,9 @@ export function templateSelect(id) {
   })
 }
 
-export function templateExists(id, name) {
+export function templateCheck(id, name) {
   return request({
-    url: '/template/exists',
+    url: '/template/check',
     method: 'get',
     params: { id, name }
   })
