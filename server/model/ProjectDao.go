@@ -51,7 +51,7 @@ func (d *ProjectDao) Check(project Project) bool {
 
 func (d *ProjectDao) Insert(project Project) bool {
 	session := db.Engine.Table("t_project")
-	project.Id = db.UUID()
+	project.Id = db.NextId()
 	project.CteTime = util.DateToStr(time.Now())
 	project.UteTime = util.DateToStr(time.Now())
 	affected, err := session.Insert(&project)

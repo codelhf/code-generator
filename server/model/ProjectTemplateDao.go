@@ -73,6 +73,9 @@ func (d *ProjectTemplateDao) Select(id string) ProjectTemplate {
 
 func (d *ProjectTemplateDao) Check(pTemplate ProjectTemplate) bool {
 	session := db.Engine.Table("t_project_template")
+	if util.IsNotBlank(pTemplate.Id) {
+		session.Where("id != ?", pTemplate.Id)
+	}
 	session.Where("project_id = ?", pTemplate.ProjectId)
 	session.Where("template_id = ?", pTemplate.TemplateId)
 	var data ProjectTemplate
@@ -83,7 +86,7 @@ func (d *ProjectTemplateDao) Check(pTemplate ProjectTemplate) bool {
 
 func (d *ProjectTemplateDao) Insert(pTemplate ProjectTemplate) bool {
 	session := db.Engine.Table("t_project_template")
-	pTemplate.Id = db.UUID()
+	pTemplate.Id = db.NextId()
 	affected, err := session.Insert(&pTemplate)
 	util.CheckError(err)
 	return affected == 1

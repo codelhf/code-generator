@@ -122,7 +122,7 @@ export default {
     }
   },
   created() {
-    this.getList()
+    // this.getList()
     this.getTypeList()
   },
   methods: {
@@ -154,8 +154,7 @@ export default {
         pageSize: 10,
         sort: '-uteTime',
         name: '',
-        desc: '',
-        type: null
+        desc: ''
       }
     },
     getTypeList() {
@@ -164,6 +163,9 @@ export default {
           { id: 1, name: this.$t('templateField.table.type1') },
           { id: 2, name: this.$t('templateField.table.type2') }
         ]
+        this.typeList[0].active = true
+        this.listQuery.type = this.typeList[0].id
+        this.getList()
       }, 100)
     },
     handleItemClick(item) {

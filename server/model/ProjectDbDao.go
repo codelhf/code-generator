@@ -44,7 +44,7 @@ func (d *ProjectDbDao) Select(projectId string, id string) ProjectDb {
 
 func (d *ProjectDbDao) Insert(projectId string, projectDb ProjectDb) bool {
 	session := db.Engine.Table("t_project_db")
-	projectDb.Id = db.UUID()
+	projectDb.Id = db.NextId()
 	projectDb.ProjectId = projectId
 	affected, err := session.Insert(&projectDb)
 	util.CheckError(err)

@@ -86,7 +86,7 @@
         <el-form-item :label="$t('projectTemplate.item.directory')" prop="directory">
           <!--<input id="file" type="file" hidden webkitdirectory @change="fileChange">-->
           <el-input v-model="projectTemplate.directory" :placeholder="$t('projectTemplate.item.placeholderDirectory')">
-            <el-button slot="append" icon="el-icon-folder" type="success" @click="btnChange"></el-button>
+            <el-button slot="append" icon="el-icon-folder" type="success" @click="btnChange" />
           </el-input>
         </el-form-item>
         <el-form-item :label="$t('projectTemplate.item.packageName')" prop="packageName">

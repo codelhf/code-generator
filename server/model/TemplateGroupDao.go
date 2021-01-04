@@ -41,7 +41,7 @@ func (d *TemplateGroupDao) Check(templateGroup TemplateGroup) bool {
 
 func (d *TemplateGroupDao) Insert(templateGroup TemplateGroup) bool {
 	session := db.Engine.Table("t_template_group")
-	templateGroup.Id = db.UUID()
+	templateGroup.Id = db.NextId()
 	affected, err := session.Insert(&templateGroup)
 	util.CheckError(err)
 	return affected == 1

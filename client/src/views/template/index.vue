@@ -150,7 +150,7 @@ export default {
     }
   },
   created() {
-    this.getList()
+    // this.getList()
     this.getGroupList()
   },
   methods: {
@@ -174,7 +174,6 @@ export default {
         pageNum: 1,
         pageSize: 10,
         sort: '-uteTime',
-        groupId: '',
         name: '',
         desc: ''
       }
@@ -262,6 +261,8 @@ export default {
             item.active = true
           }
         })
+        this.listQuery.groupId = this.groupList[0].id
+        this.getList()
       })
     },
     handleItemClick(item) {

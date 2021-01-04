@@ -118,7 +118,7 @@
 </template>
 
 <script>
-import {typeColumnList, typeColumnSelect, typeColumnCheck, typeColumnInsert, typeColumnUpdate, typeColumnDelete } from '@/api/type-column'
+import { typeColumnList, typeColumnSelect, typeColumnCheck, typeColumnInsert, typeColumnUpdate, typeColumnDelete } from '@/api/type-column'
 import { typeLanguageList, typeLanguageSelect, typeLanguageCheck, typeLanguageInsert, typeLanguageUpdate, typeLanguageDelete } from '@/api/type-language'
 import { allDbType } from '@/api/type-column'
 import Pagination from '@/components/Pagination/index'
@@ -163,7 +163,7 @@ export default {
     }
   },
   created() {
-    this.getList()
+    // this.getList()
     this.getLanguageList()
     this.getAllDbType()
   },
@@ -196,7 +196,6 @@ export default {
         pageNum: 1,
         pageSize: 10,
         sort: '-uteTime',
-        languageId: '',
         dbType: null,
         columnType: '',
         fieldType: ''
@@ -271,6 +270,9 @@ export default {
             item.active = true
           }
         })
+        this.languageList[0].active = true
+        this.listQuery.languageId = this.languageList[0].id
+        this.getList()
       })
     },
     handleItemClick(item) {

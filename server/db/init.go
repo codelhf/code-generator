@@ -4,9 +4,7 @@ import (
 	"code-generator-go/server/util"
 	"github.com/go-xorm/xorm"
 	_ "github.com/mattn/go-sqlite3"
-	"github.com/satori/go.uuid"
 	"os"
-	"strings"
 )
 
 var Engine *xorm.Engine
@@ -25,7 +23,7 @@ func init() {
 	//fmt.Println(res)
 }
 
-func UUID() string {
-	u1 := uuid.NewV4()
-	return strings.ReplaceAll(u1.String(), "-", "")
+func NextId() string {
+	worker, _ := util.CreateWorker(0, 0)
+	return worker.NextIdStr()
 }

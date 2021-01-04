@@ -81,7 +81,7 @@ func (d *TypeColumnDao) Check(typeColumn TypeColumn) bool {
 
 func (d *TypeColumnDao) Insert(typeColumn TypeColumn) bool {
 	session := db.Engine.Table("t_type_column")
-	typeColumn.Id = db.UUID()
+	typeColumn.Id = db.NextId()
 	affected, err := session.Insert(&typeColumn)
 	util.CheckError(err)
 	return affected == 1

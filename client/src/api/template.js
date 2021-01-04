@@ -33,11 +33,11 @@ export function templateSelect(id) {
   })
 }
 
-export function templateCheck(id, name) {
+export function templateCheck(data) {
   return request({
     url: '/template/check',
-    method: 'get',
-    params: { id, name }
+    method: 'post',
+    data
   })
 }
 

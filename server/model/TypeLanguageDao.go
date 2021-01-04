@@ -41,7 +41,7 @@ func (d *TypeLanguageDao) Check(typeLanguage TypeLanguage) bool {
 
 func (d *TypeLanguageDao) Insert(typeLanguage TypeLanguage) bool {
 	session := db.Engine.Table("t_type_language")
-	typeLanguage.Id = db.UUID()
+	typeLanguage.Id = db.NextId()
 	affected, err := session.Insert(&typeLanguage)
 	util.CheckError(err)
 	return affected == 1

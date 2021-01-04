@@ -40,7 +40,7 @@ func (d *TemplateDao) Export(ids []string) []Template {
 func (d *TemplateDao) Import(templates []Template) bool {
 	session := db.Engine.Table("t_template")
 	for index, template := range templates {
-		template.Id = db.UUID()
+		template.Id = db.NextId()
 		templates[index] = template
 	}
 	affected, err := session.InsertMulti(&templates)
@@ -64,8 +64,16 @@ func (d *TemplateDao) Check(template Template) bool {
 	if util.IsNotBlank(template.Id) {
 		session.Where("id != ?", template.Id)
 	}
-	session.Where("group_id = ?", template.GroupId)
-	session.Where("name = ?", template.Name)
+	if util.IsNotBlank(template.GroupId) {
+		session.Where("group_id = ?", template.GroupId)
+	} else {
+		return false
+	}
+	if util.IsNotBlank(template.Name) {
+		session.Where("name = ?", template.Name)
+	} else {
+		return false
+	}
 	var data Template
 	has, err := session.Get(&data)
 	util.CheckError(err)
@@ -74,7 +82,7 @@ func (d *TemplateDao) Check(template Template) bool {
 
 func (d *TemplateDao) Insert(template Template) bool {
 	session := db.Engine.Table("t_template")
-	template.Id = db.UUID()
+	template.Id = db.NextId()
 	affected, err := session.Insert(&template)
 	util.CheckError(err)
 	return affected == 1

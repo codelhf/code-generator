@@ -62,7 +62,7 @@ func (d *TemplateFieldDao) Check(templateField TemplateField) bool {
 
 func (d *TemplateFieldDao) Insert(templateField TemplateField) bool {
 	session := db.Engine.Table("t_template_field")
-	templateField.Id = db.UUID()
+	templateField.Id = db.NextId()
 	templateField.Type = 2
 	affected, err := session.Insert(&templateField)
 	util.CheckError(err)

@@ -41,7 +41,7 @@ func (d *ProjectTableDao) Select(projectId, tableName string) ProjectTable {
 // 生成代码之前保存表配置
 func (d *ProjectTableDao) Insert(table ProjectTable) bool {
 	session := db.Engine.Table("t_project_table")
-	table.Id = db.UUID()
+	table.Id = db.NextId()
 	affected, err := session.Insert(&table)
 	util.CheckError(err)
 	return affected == 1

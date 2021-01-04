@@ -103,7 +103,7 @@ export default {
       this.template.template = val
     },
     handleCheckName() {
-      templateCheck(this.template.id, this.template.name).then(res => {
+      templateCheck(this.template).then(res => {
         // do nothing
       }, () => {
         this.$message.error(this.template.name + ' ' + this.$t('common.message.exists'))
