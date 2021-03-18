@@ -37,6 +37,9 @@ func GetFuncMap() map[string]interface{} {
 		"size": func(arr []ColumnInfo) int {
 			return len(arr)
 		},
+		"equals": func(str1, str2 string) bool {
+			return strings.EqualFold(str1, str2)
+		},
 		"concat": func(strList ...string) string {
 			// 定义一个字节缓冲,快速拼接字符串
 			var result bytes.Buffer
@@ -45,8 +48,14 @@ func GetFuncMap() map[string]interface{} {
 			}
 			return result.String()
 		},
-		"equals": func(str1, str2 string) bool {
-			return strings.EqualFold(str1, str2)
+		"concatUrl": func(httpPrefix, str string) string {
+			if strings.EqualFold("/", httpPrefix) {
+				return "/" + str
+			}
+			if strings.EqualFold("", strings.TrimSpace(httpPrefix)) {
+				return "/" + str
+			}
+			return httpPrefix + "/" + str
 		},
 		"isTrue": func(str interface{}) bool {
 			switch str.(type) {
