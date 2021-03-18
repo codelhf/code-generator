@@ -27,7 +27,7 @@ func (d *ProjectTemplateDao) List(pageNum, pageSize int, projectId string) ([]Pr
 	// 查询
 	session.Table("t_template")
 	templateList := make([]Template, 0)
-	err = session.In("id", ids).Find(&templateList)
+	err = session.In("id", ids).OrderBy("name").Find(&templateList)
 	util.CheckError(err)
 	dtoList := toDTO(dataList, templateList)
 	return dtoList, total
@@ -35,28 +35,31 @@ func (d *ProjectTemplateDao) List(pageNum, pageSize int, projectId string) ([]Pr
 
 func toDTO(dataList []ProjectTemplate, templateList []Template) []ProjectTemplateDTO {
 	dtoList := make([]ProjectTemplateDTO, 0)
-	for i := 0; i < len(dataList); i++ {
-		data := dataList[i]
-		dto := ProjectTemplateDTO{}
-		dto.Id = data.Id
-		dto.ProjectId = data.ProjectId
-		dto.GroupId = data.GroupId
-		dto.TemplateId = data.TemplateId
-		dto.Directory = data.Directory
-		dto.PackageName = data.PackageName
-		dto.FileSuffix = data.FileSuffix
-		dto.IsGenerate = data.IsGenerate
-		dto.IsOverride = data.IsOverride
-		for j := 0; j < len(templateList); j++ {
-			template := templateList[j]
-			if dto.TemplateId == template.Id {
+	for i := 0; i < len(templateList); i++ {
+		template := templateList[i]
+		for j := 0; j < len(dataList); j++ {
+			data := dataList[j]
+			if data.TemplateId == template.Id {
+				dto := ProjectTemplateDTO{}
+				dto.Id = data.Id
+				dto.ProjectId = data.ProjectId
+				dto.GroupId = data.GroupId
+				dto.TemplateId = data.TemplateId
+				dto.Directory = data.Directory
+				dto.PackageName = data.PackageName
+				dto.FileSuffix = data.FileSuffix
+				dto.IsGenerate = data.IsGenerate
+				dto.IsOverride = data.IsOverride
+
 				dto.Name = template.Name
 				dto.Type = template.Type
 				dto.FileType = template.FileType
+
+				dtoList = append(dtoList, dto)
 			}
 		}
-		dtoList = append(dtoList, dto)
 	}
+
 	return dtoList
 }
 

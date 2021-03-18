@@ -6,7 +6,7 @@ import (
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq"
-	_ "github.com/mattn/go-oci8"
+	//_ "github.com/mattn/go-oci8"
 	"strings"
 )
 
@@ -219,6 +219,12 @@ func SqlTypeToColumnType(sqlType string, typeList []model.TypeColumn) string {
 			}
 			if strings.EqualFold("datetime", strings.ToLower(sqlType)) {
 				return "TIMESTAMP"
+			}
+			if strings.EqualFold("decimal", strings.ToLower(sqlType)) {
+				return "DECIMAL"
+			}
+			if strings.EqualFold("text", strings.ToLower(sqlType)) {
+				return "VARCHAR"
 			}
 			return typeItem.ColumnType
 		}
