@@ -2,8 +2,11 @@
   <el-row>
     <el-col :span="4">
       <div class="tree-list" @contextmenu.prevent @click="closeRightMenu">
-        <el-input v-if="showSearch" v-model="filterText" @input="filterTable" />
-        <el-card class="box-card" shadow="never">
+        <el-input v-if="showSearch" v-model="filterText" class="filter-input" />
+        <el-card
+          :class="{'filter-tree': true, 'has-input': showSearch, 'has-menu': showMenu}"
+          shadow="never"
+        >
           <div
             v-for="item in filterData"
             :key="item.name"
@@ -13,18 +16,36 @@
           >
             <svg-icon v-if="showIcon" class="icon" :icon-class="item.table ? 'table': 'view'" />
             <span class="name">{{ item.name }}</span>
-            <div
-              v-show="rightMenu && item.rightMenu && item.name === clickedItem"
-              class="right-menu"
-              :style="{left:left+'px',top:top+'px'}"
-              @click.stop
-            >
-              <span class="menu plus" @click="addItem()">{{ $t('components.treeList.addItem') }}</span>
-              <span class="menu edit" @click="updateItem(item)">{{ $t('components.treeList.updateItem') }}</span>
-              <span class="menu delete" @click="deleteItem(item)">{{ $t('components.treeList.deleteItem') }}</span>
-            </div>
           </div>
         </el-card>
+        <div
+          v-show="!showMenu && showRightMenu && clickedItem.rightMenu"
+          class="right-menu"
+          :style="{left:left+'px',top:top+'px'}"
+          @click.stop
+        >
+          <el-button-group>
+            <el-button class="menu" size="mini" icon="el-icon-plus" @click="addItem">
+              {{ $t('components.treeList.addItem') }}
+            </el-button>
+            <el-button class="menu" size="mini" icon="el-icon-edit" @click="updateItem">
+              {{ $t('components.treeList.updateItem') }}
+            </el-button>
+            <el-button class="menu" size="mini" icon="el-icon-delete" @click="deleteItem">
+              {{ $t('components.treeList.deleteItem') }}
+            </el-button>
+          </el-button-group>
+        </div>
+        <div v-show="showMenu" class="bottom-menu">
+          <el-button-group>
+            <el-button class="menu" size="mini" icon="el-icon-plus" @click="addItem">
+            </el-button>
+            <el-button class="menu" size="mini" icon="el-icon-edit" @click="updateItem">
+            </el-button>
+            <el-button class="menu" size="mini" icon="el-icon-delete" @click="deleteItem">
+            </el-button>
+          </el-button-group>
+        </div>
       </div>
     </el-col>
     <el-col :span="20">
@@ -48,6 +69,11 @@ export default {
       required: false,
       default: true
     },
+    showMenu: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
     showIcon: {
       type: Boolean,
       required: false,
@@ -58,7 +84,7 @@ export default {
     return {
       filterText: '',
       filterData: [],
-      rightMenu: false,
+      showRightMenu: false,
       top: 0,
       left: 0,
       clickedItem: ''
@@ -67,6 +93,9 @@ export default {
   watch: {
     data() {
       this.filterTable()
+    },
+    filterText(val) {
+      this.filterTable(val)
     }
   },
   methods: {
@@ -79,27 +108,30 @@ export default {
       })
     },
     itemClick(item) {
+      if (this.showMenu) return
       this.closeRightMenu()
+      this.clickedItem = item
       this.$emit('itemClick', item)
     },
     rightClick(item, e) {
+      if (this.showMenu) return
       this.top = e.clientY
       this.left = e.clientX
-      this.clickedItem = item.name
-      this.rightMenu = true
+      this.clickedItem = item
+      this.showRightMenu = true
       this.$emit('rightClick', item)
     },
     closeRightMenu() {
-      this.rightMenu = false
+      this.showRightMenu = false
     },
     addItem() {
       this.$emit('addItem')
     },
-    updateItem(item) {
-      this.$emit('updateItem', item)
+    updateItem() {
+      this.$emit('updateItem', this.clickedItem)
     },
-    deleteItem(item) {
-      this.$emit('deleteItem', item)
+    deleteItem() {
+      this.$emit('deleteItem', this.clickedItem)
     }
   }
 }
@@ -109,20 +141,17 @@ export default {
   .tree-list {
     width: 100%;
     height: calc(100vh - 124px);
-    border: 1px solid #eeeeee;
+    border: 1px solid #dddddd;
     border-radius: 4px;
-    .el-card {
+    .filter-tree {
       width: 100%;
       height: 100%;
-    }
-    .el-input+.el-card{
-      height: calc(100% - 40px);
-    }
-    .el-card__body{
-      padding: 0 20px;
-      width: 100%;
-      height: 100%;
+      border: 1px solid #dddddd;
+      border-radius: 4px;
       overflow: scroll;
+      .el-card__body {
+        padding: 0 20px;
+      }
       .item {
         padding: 5px 0;
         width: max-content;
@@ -134,30 +163,36 @@ export default {
         .name {
           margin-left: 5px;
         }
-        .right-menu {
-          position: fixed;
-          width: 80px;
-          height: 90px;
-          z-index: 999;
-          .menu {
-            display: inline-block;
-            padding: 0 10px;
-            width: 100%;
-            height: 28px;
-            line-height: 28px;
-            border: 1px solid #bfcbd9;
-            background-color: #ffffff;
-          }
-          .menu:hover {
-            background-color: #eeeeee;
-          }
-        }
       }
       .item:hover {
         background-color: #eeeeee;
       }
       .item.active {
         background-color: #eeeeee;
+      }
+    }
+    .filter-tree.has-input.has-menu {
+      height: calc(100% - 68px);
+    }
+    .filter-tree.has-input {
+      height: calc(100% - 40px);
+    }
+    .filter-tree.has-menu {
+      height: calc(100% - 28px);
+    }
+    .right-menu {
+      position: fixed;
+      width: 80px;
+      height: 90px;
+      z-index: 999;
+      .menu {
+        border-radius: 0;
+      }
+    }
+    .bottom-menu {
+      text-align: center;
+      .menu {
+        width: 60px;
       }
     }
   }
