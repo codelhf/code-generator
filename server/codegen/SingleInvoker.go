@@ -70,10 +70,10 @@ func (s *SingleInvoker) execute() string {
 		var fileName string
 		if template.Type == 2 {
 			//后缀加文件格式
-			fileName = template.FileSuffix + "." + template.FileType
+			fileName = strings.TrimSpace(template.FileSuffix) + "." + strings.TrimSpace(template.FileType)
 		} else {
 			//表名加后缀加文件格式
-			fileName = s.ClassName + template.FileSuffix + "." + template.FileType
+			fileName = s.ClassName + strings.TrimSpace(template.FileSuffix) + "." + strings.TrimSpace(template.FileType)
 		}
 		//文件名包含 / 最后一个 / 后面为生成文件名
 		if strings.Contains(fileName, "/") {
