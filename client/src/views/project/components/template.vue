@@ -217,22 +217,26 @@ export default {
     },
     handleDetail(id) {
       this.dialogFormVisible = true
-      this.projectTemplate = {
-        projectId: this.projectId,
-        isGenerate: 1,
-        isOverride: 1
-      }
-      if (id) {
-        projectTemplateSelect(id).then(res => {
-          this.templateList = this.templateAll.filter(item => {
-            if (item.groupId === res.data.groupId) {
-              return item
-            }
-          })
-          this.projectTemplate = res.data
-          this.projectTemplate.projectId = this.projectId
+      // this.projectTemplate = {
+      //   projectId: this.projectId,
+      //   isGenerate: 1,
+      //   isOverride: 1
+      // }
+      // if (id) {
+      projectTemplateSelect(id).then(res => {
+        this.templateList = this.templateAll.filter(item => {
+          if (item.groupId === res.data.groupId) {
+            return item
+          }
         })
-      }
+        this.projectTemplate = res.data
+        if (!res.data || !res.data.id) {
+          this.projectTemplate.projectId = this.projectId
+          this.projectTemplate.isGenerate = 1
+          this.projectTemplate.isOverride = 1
+        }
+      })
+      // }
     },
     // fileChange(e) {
     //   try {

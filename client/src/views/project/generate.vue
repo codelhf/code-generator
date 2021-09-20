@@ -58,6 +58,9 @@ export default {
       this.getTableList()
     } else {
       projectLastId().then(res => {
+        if (!res.data) {
+          this.$router.push('/project/index')
+        }
         this.projectId = res.data
         this.getTableList()
       })
