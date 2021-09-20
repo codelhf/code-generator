@@ -19,7 +19,7 @@ type SingleInvoker struct {
 
 func (s *SingleInvoker) execute() string {
 	if !s.checkBeforeExecute() {
-		return ""
+		return util.EMPTY
 	}
 	s.InitTableInfo()
 	//模板数据
@@ -63,7 +63,7 @@ func (s *SingleInvoker) execute() string {
 	data2["ClassDesc"] = s.ClassDesc
 	data2["className"] = util.FirstToLowerCase(s.ClassName)
 
-	resultString := ""
+	resultString := util.EMPTY
 	// 循环模板生成代码
 	for i := 0; i < len(projectTemplateList); i++ {
 		template := projectTemplateList[i]

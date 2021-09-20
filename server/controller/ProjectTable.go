@@ -44,6 +44,9 @@ func ProjectTableGenerate(w http.ResponseWriter, r *http.Request) {
 	projectId := r.FormValue("projectId")
 	tableList := make([]model.ProjectTable, 0)
 	common.Bind(r, &tableList)
+	// 记录最新操作的project
+	userLogDao.Update(model.LAST_PROJECT, projectId)
+	// 配置生成器实例和生成代码
 	generator := codegen.NewGenerator(projectId)
 	result := generator.Generate(tableList)
 	common.SuccessData(w, result)

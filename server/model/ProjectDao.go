@@ -15,10 +15,10 @@ func (d *ProjectDao) List(pageNum, pageSize int, name, desc string) ([]Project, 
 		session.Limit(pageSize, db.GetOffset(pageNum, pageSize))
 	}
 	if util.IsNotBlank(name) {
-		session.Where("name like ?", "%" + name + "%")
+		session.Where("name like ?", "%"+name+"%")
 	}
 	if util.IsNotBlank(desc) {
-		session.Where("desc like ?", "%" + desc + "%")
+		session.Where("desc like ?", "%"+desc+"%")
 	}
 	dataList := make([]Project, 0)
 	total, err := session.OrderBy("ute_time desc").FindAndCount(&dataList)
@@ -78,16 +78,4 @@ func (d *ProjectDao) Delete(ids []string) bool {
 	affected, err := session.In("id", ids).Delete(&project)
 	util.CheckError(err)
 	return affected >= 1
-}
-
-//获取最后更新的项目
-func (d *ProjectDao) LastId() string {
-	session := db.Engine.Table("t_project")
-	var data Project
-	has, err := session.Desc("ute_time").Limit(1).Get(&data)
-	util.CheckError(err)
-	if !has {
-		return ""
-	}
-	return data.Id
 }

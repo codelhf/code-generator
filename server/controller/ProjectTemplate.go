@@ -4,11 +4,13 @@ import (
 	"code-generator-go/server/common"
 	"code-generator-go/server/db"
 	"code-generator-go/server/model"
+	"code-generator-go/server/util"
 	"net/http"
 	"strings"
 )
 
 var projectTemplateDao model.ProjectTemplateDao
+var userLogDao model.UserLogDao
 
 func ProjectTemplateList(w http.ResponseWriter, r *http.Request) {
 	pageInfo := db.BuildPageInfo(r)
@@ -22,6 +24,11 @@ func ProjectTemplateList(w http.ResponseWriter, r *http.Request) {
 func ProjectTemplateSelect(w http.ResponseWriter, r *http.Request) {
 	id := r.FormValue("id")
 	data := projectTemplateDao.Select(id)
+	if util.IsBlank(data.Id) {
+		data = model.ProjectTemplate{}
+		data.Directory = userLogDao.Select(model.CODE_DIRECTORY)
+		data.PackageName = userLogDao.Select(model.CODE_PACKAGE_NAME)
+	}
 	common.SuccessData(w, data)
 }
 
@@ -54,6 +61,10 @@ func ProjectTemplateInsert(w http.ResponseWriter, r *http.Request) {
 		common.FailMsg(w, "Save ProjectTemplate Failed")
 		return
 	}
+	codeDirectory := temp.Directory
+	userLogDao.Update(model.CODE_DIRECTORY, codeDirectory)
+	codePackageName := temp.PackageName
+	userLogDao.Update(model.CODE_PACKAGE_NAME, codePackageName)
 	common.SuccessMsg(w, "Save ProjectTemplate Success")
 }
 

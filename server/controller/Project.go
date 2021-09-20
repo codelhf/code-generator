@@ -58,6 +58,7 @@ func ProjectInsert(w http.ResponseWriter, r *http.Request) {
 		common.FailMsg(w, "Save Project Failed")
 		return
 	}
+	userLogDao.Update(model.LAST_PROJECT, temp.Id)
 	common.SuccessMsg(w, "Save Project Success")
 }
 
@@ -72,6 +73,7 @@ func ProjectUpdate(w http.ResponseWriter, r *http.Request) {
 		common.FailMsg(w, "Update Project Failed")
 		return
 	}
+	userLogDao.Update(model.LAST_PROJECT, temp.Id)
 	common.SuccessMsg(w, "Update Project Success")
 }
 
@@ -93,6 +95,6 @@ func ProjectDelete(w http.ResponseWriter, r *http.Request) {
 }
 
 func ProjectLastId(w http.ResponseWriter, r *http.Request) {
-	projectId := projectDao.LastId()
+	projectId := userLogDao.Select(model.LAST_PROJECT)
 	common.SuccessData(w, projectId)
 }
