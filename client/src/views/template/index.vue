@@ -189,12 +189,26 @@ export default {
         params.heads = JSON.stringify(this.getHeads())
         params.ids = this.multipleSelection.join(',')
         templateExport(params).then(res => {
-          const url = window.URL.createObjectURL(new Blob([res.data]))
-          const link = document.createElement('a')
-          link.href = url
-          link.setAttribute('download', this.$t('template.excel.fileName') + '.xls')
-          document.body.appendChild(link)
-          link.click()
+          const blob = new Blob([res.data])
+          const downloadElement = document.createElement('a') // 创建a标签
+          // 从response的headers中获取filename, 后端response.setHeader("Content-disposition", "attachment; filename=xxxx.docx") 设置的文件名;
+          const contentDisposition = res.headers['content-disposition']
+          const pattern = new RegExp('filename=([^;]+\\.[^\\.;]+);*')
+          const result = pattern.exec(contentDisposition)
+          const filename = result[1]
+          if ('msSaveOrOpenBlob' in window.navigator) {
+            // 兼容ie
+            window.navigator.msSaveOrOpenBlob(blob, filename)
+          } else {
+            const href = window.URL.createObjectURL(blob) // 创建下载的链接
+            downloadElement.style.display = 'none'
+            downloadElement.href = href
+            downloadElement.download = filename // 下载后文件名
+            document.body.appendChild(downloadElement) // 添加a标签到body
+            downloadElement.click() // 点击下载
+            document.body.removeChild(downloadElement) // 下载完成移除元素
+            window.URL.revokeObjectURL(href) // 释放掉blob对象
+          }
         })
       } else {
         this.$message.warning(this.$t('template.excel.warning'))

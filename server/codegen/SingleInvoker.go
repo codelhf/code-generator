@@ -29,6 +29,11 @@ func (s *SingleInvoker) execute() string {
 	projectTemplateList := s.config.ProjectTemplateList
 	for i := 0; i < len(projectTemplateList); i++ {
 		template := projectTemplateList[i]
+		//处理空白字符
+		template.Directory = strings.TrimSpace(template.Directory)
+		template.PackageName = strings.TrimSpace(template.PackageName)
+		template.FileSuffix = strings.TrimSpace(template.FileSuffix)
+		template.FileType = strings.TrimSpace(template.FileType)
 		data2[template.Name] = template
 	}
 	//自定义模板字段
@@ -65,15 +70,20 @@ func (s *SingleInvoker) execute() string {
 		if template.IsGenerate != 1 {
 			continue
 		}
+		//处理空白字符
+		template.Directory = strings.TrimSpace(template.Directory)
+		template.PackageName = strings.TrimSpace(template.PackageName)
+		template.FileSuffix = strings.TrimSpace(template.FileSuffix)
+		template.FileType = strings.TrimSpace(template.FileType)
 		//设置当前模板配置, 通过Template获取包名等
 		data2["Template"] = template
 		var fileName string
 		if template.Type == 2 {
 			//后缀加文件格式
-			fileName = strings.TrimSpace(template.FileSuffix) + "." + strings.TrimSpace(template.FileType)
+			fileName = template.FileSuffix + "." + template.FileType
 		} else {
 			//表名加后缀加文件格式
-			fileName = s.ClassName + strings.TrimSpace(template.FileSuffix) + "." + strings.TrimSpace(template.FileType)
+			fileName = s.ClassName + template.FileSuffix + "." + template.FileType
 		}
 		//文件名包含 / 最后一个 / 后面为生成文件名
 		if strings.Contains(fileName, "/") {

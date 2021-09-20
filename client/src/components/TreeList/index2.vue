@@ -1,48 +1,42 @@
 <template>
-  <el-row>
-    <el-col :span="4">
-      <div class="tree-list" @contextmenu.prevent @click="closeRightMenu">
-        <el-input v-if="showSearch" v-model="filterText" class="filter-input" />
-        <div :class="{'filter-tree': true, 'has-input': showSearch, 'has-menu': showMenu}">
-          <el-tree
-            ref="tree"
-            class="tree"
-            :data="data"
-            :props="defaultProps"
-            :show-checkbox="true"
-            :check-strictly="true"
-            :filter-node-method="filterNode"
-            @node-click="nodeClick"
-            @node-contextmenu="rightClick"
-          />
-        </div>
-        <div
-          v-show="!showMenu && showRightMenu"
-          class="right-menu"
-          :style="{top:top+'px',left:left+'px'}"
-          @click.stop
-        >
-          <el-button-group>
-            <el-button class="menu" size="mini" icon="el-icon-plus" @click="addItem">添加</el-button>
-            <el-button class="menu" size="mini" icon="el-icon-edit" @click="updateItem">修改</el-button>
-            <el-button class="menu" size="mini" icon="el-icon-delete" @click="deleteItem">删除</el-button>
-          </el-button-group>
-        </div>
-        <div v-show="showMenu" class="bottom-menu">
-          <el-button-group>
-            <el-button class="menu" size="mini" icon="el-icon-plus" @click="addItem" />
-            <el-button class="menu" size="mini" icon="el-icon-edit" @click="updateItem" />
-            <el-button class="menu" size="mini" icon="el-icon-delete" @click="deleteItem" />
-          </el-button-group>
-        </div>
-      </div>
-    </el-col>
-    <el-col :span="20">
-      <div class="tree-right">
-        <slot />
-      </div>
-    </el-col>
-  </el-row>
+  <div class="tree-list" @contextmenu.prevent @click="closeRightMenu">
+    <el-input v-if="showSearch" v-model="filterText" prefix-icon="el-icon-search" class="filter-input" />
+    <div :class="{'filter-tree': true, 'has-input': showSearch}">
+      <el-tree
+        ref="tree"
+        class="tree"
+        :data="data"
+        :node-key="nodeKey"
+        :props="defaultProps"
+        :show-checkbox="showCheckBox"
+        :check-strictly="!enableParentCheck"
+        :check-on-click-node="enableClickCheck"
+        :filter-node-method="filterNode"
+        @check-change="nodeCheck"
+        @node-click="nodeClick"
+        @node-contextmenu="rightClick"
+      >
+        <span slot-scope="{ node }" class="custom-tree-node">
+          <span v-if="showIcon">
+            <i v-if="node.data.child && node.data.child.length > 0" :class="node.expanded ? 'el-icon-folder-opened' : 'el-icon-folder'" />
+            <i v-else-if="node.data.children && node.data.children.length > 0" :class="node.expanded ? 'el-icon-folder-opened' : 'el-icon-folder'" />
+            <i v-else class="el-icon-document" />
+            {{ node.data.label ? node.data.label : node.data.name }}
+          </span>
+          <span v-else>
+            {{ node.data.label ? node.data.label : node.data.name }}
+          </span>
+        </span>
+      </el-tree>
+    </div>
+    <div v-show="showRightMenu" class="right-menu" :style="{top:top+'px',left:left+'px'}" @click.stop>
+      <el-button-group>
+        <el-button class="menu" size="mini" icon="el-icon-plus" @click="appendNode">添加</el-button>
+        <el-button class="menu" size="mini" icon="el-icon-edit" @click="updateNode">修改</el-button>
+        <el-button class="menu" size="mini" icon="el-icon-delete" @click="deleteNode">删除</el-button>
+      </el-button-group>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -58,15 +52,40 @@ export default {
       required: false,
       default: true
     },
-    showMenu: {
+    showIcon: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
+    showCheckBox: {
       type: Boolean,
       required: false,
       default: false
     },
-    showIcon: {
+    enableParentCheck: {
       type: Boolean,
       required: false,
       default: false
+    },
+    enableClickCheck: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    disableRightClick: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    disableParentNode: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    nodeKey: {
+      type: String,
+      required: false,
+      default: 'id'
     },
     defaultProps: {
       type: Object,
@@ -87,12 +106,23 @@ export default {
       showRightMenu: false,
       top: 0,
       left: 0,
-      clickedItem: null
+      clickedNode: null
     }
   },
   watch: {
     filterText(val) {
       this.$refs.tree.filter(val)
+    }
+  },
+  created() {
+    this.defaultProps.disabled = (data, node) => {
+      if (this.disableParentNode && data.child) {
+        return data.child.length > 0
+      }
+      if (this.disableParentNode && data.children) {
+        return data.children.length > 0
+      }
+      return false
     }
   },
   methods: {
@@ -107,55 +137,54 @@ export default {
       }
       return false
     },
+    nodeCheck(data, node, co) {
+      console.log(data, node, co)
+      this.clickedNode = data
+      this.$emit('node-check', data, node)
+    },
     nodeClick(data, node, co) {
       console.log(data, node, co)
       this.closeRightMenu()
-      this.clickedItem = data
-      this.$emit('node-click', data)
+      this.clickedNode = data
+      this.$emit('node-click', data, node)
     },
     rightClick(e, data, node, co) {
+      if (this.disableRightClick) {
+        return
+      }
       console.log(data, node, co)
       this.top = e.clientY
       this.left = e.clientX
-      this.clickedItem = data
       this.showRightMenu = true
+      this.clickedNode = data
       this.$emit('right-click', data)
     },
     closeRightMenu() {
       this.showRightMenu = false
     },
-    addItem() {
-      if (this.showMenu) {
-        const checkedNodes = this.$refs.tree.getCheckedNodes()
-        if (checkedNodes.length !== 1) {
-          this.$message.warning('请选择一个节点')
-          return
-        }
-        this.clickedItem = checkedNodes[0]
-      }
-      this.$emit('add-item', this.clickedItem)
+    appendNode() {
+      this.$emit('append-node', this.clickedNode)
+      this.closeRightMenu()
     },
-    updateItem() {
-      if (this.showMenu) {
-        const checkedNodes = this.$refs.tree.getCheckedNodes()
-        if (checkedNodes.length !== 1) {
-          this.$message.warning('请选择一个节点')
-          return
-        }
-        this.clickedItem = checkedNodes[0]
-      }
-      this.$emit('update-item', this.clickedItem)
+    updateNode() {
+      this.$emit('update-node', this.clickedNode)
+      this.closeRightMenu()
     },
-    deleteItem() {
-      if (this.showMenu) {
-        const checkedNodes = this.$refs.tree.getCheckedNodes()
-        if (checkedNodes.length !== 1) {
-          this.$message.warning('请选择一个节点')
-          return
-        }
-        this.clickedItem = checkedNodes[0]
-      }
-      this.$emit('delete-item', this.clickedItem)
+    deleteNode() {
+      this.$emit('delete-node', this.clickedNode)
+      this.closeRightMenu()
+    },
+    getCheckedKeys() {
+      return this.$refs.tree.getCheckedKeys()
+    },
+    setCheckedKeys(keys) {
+      this.$refs.tree.setCheckedKeys(keys)
+    },
+    getCheckedNodes() {
+      return this.$refs.tree.getCheckedNodes()
+    },
+    getHalfCheckedKeys() {
+      return this.$refs.tree.getHalfCheckedKeys()
     }
   }
 }
@@ -165,9 +194,15 @@ export default {
 .tree-list {
   padding: 10px;
   width: 100%;
-  height: calc(100vh - 20px);
+  height: 100%;
   border: 1px solid #dddddd;
   border-radius: 4px;
+  .filter-input {
+    margin-bottom: 10px;
+    .el-input__inner {
+      border-radius: 20px;
+    }
+  }
   .filter-tree {
     width: 100%;
     height: 100%;
@@ -175,14 +210,8 @@ export default {
     border-radius: 4px;
     overflow: scroll;
   }
-  .filter-tree.has-input.has-menu {
-    height: calc(100% - 64px);
-  }
   .filter-tree.has-input {
-    height: calc(100% - 36px);
-  }
-  .filter-tree.has-menu {
-    height: calc(100% - 28px);
+    height: calc(100% - 46px);
   }
   .right-menu {
     position: fixed;
@@ -196,11 +225,6 @@ export default {
   .bottom-menu {
     text-align: center;
   }
-}
-.tree-right {
-  padding-left: 20px;
-  height: calc(100vh - 20px);
-  overflow: auto;
 }
 </style>
 
