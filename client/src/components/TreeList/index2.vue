@@ -1,42 +1,59 @@
 <template>
-  <div class="tree-list" @contextmenu.prevent @click="closeRightMenu">
-    <el-input v-if="showSearch" v-model="filterText" prefix-icon="el-icon-search" class="filter-input" />
-    <div :class="{'filter-tree': true, 'has-input': showSearch}">
-      <el-tree
-        ref="tree"
-        class="tree"
-        :data="data"
-        :node-key="nodeKey"
-        :props="defaultProps"
-        :show-checkbox="showCheckBox"
-        :check-strictly="!enableParentCheck"
-        :check-on-click-node="enableClickCheck"
-        :filter-node-method="filterNode"
-        @check-change="nodeCheck"
-        @node-click="nodeClick"
-        @node-contextmenu="rightClick"
-      >
-        <span slot-scope="{ node }" class="custom-tree-node">
-          <span v-if="showIcon">
-            <i v-if="node.data.child && node.data.child.length > 0" :class="node.expanded ? 'el-icon-folder-opened' : 'el-icon-folder'" />
-            <i v-else-if="node.data.children && node.data.children.length > 0" :class="node.expanded ? 'el-icon-folder-opened' : 'el-icon-folder'" />
-            <i v-else class="el-icon-document" />
-            {{ node.data.label ? node.data.label : node.data.name }}
-          </span>
-          <span v-else>
-            {{ node.data.label ? node.data.label : node.data.name }}
-          </span>
-        </span>
-      </el-tree>
-    </div>
-    <div v-show="showRightMenu" class="right-menu" :style="{top:top+'px',left:left+'px'}" @click.stop>
-      <el-button-group>
-        <el-button class="menu" size="mini" icon="el-icon-plus" @click="appendNode">添加</el-button>
-        <el-button class="menu" size="mini" icon="el-icon-edit" @click="updateNode">修改</el-button>
-        <el-button class="menu" size="mini" icon="el-icon-delete" @click="deleteNode">删除</el-button>
-      </el-button-group>
-    </div>
-  </div>
+  <el-row>
+    <el-col :span="4">
+      <div class="tree-list" @contextmenu.prevent @click="closeRightMenu">
+        <el-input v-if="showSearch" v-model="filterText" class="filter-input" />
+        <el-card
+          :class="{'filter-tree': true, 'has-input': showSearch, 'has-menu': showMenu}"
+          shadow="never"
+        >
+          <div
+            v-for="item in filterData"
+            :key="item.name"
+            :class="item.active ? 'item active' : 'item'"
+            @click="itemClick(item)"
+            @contextmenu="rightClick(item, $event)"
+          >
+            <svg-icon v-if="showIcon" class="icon" :icon-class="item.table ? 'table': 'view'" />
+            <span class="name">{{ item.name }}</span>
+          </div>
+        </el-card>
+        <div
+          v-show="!showMenu && showRightMenu && clickedItem.rightMenu"
+          class="right-menu"
+          :style="{left:left+'px',top:top+'px'}"
+          @click.stop
+        >
+          <el-button-group>
+            <el-button class="menu" size="mini" icon="el-icon-plus" @click="addItem">
+              {{ $t('components.treeList.addItem') }}
+            </el-button>
+            <el-button class="menu" size="mini" icon="el-icon-edit" @click="updateItem">
+              {{ $t('components.treeList.updateItem') }}
+            </el-button>
+            <el-button class="menu" size="mini" icon="el-icon-delete" @click="deleteItem">
+              {{ $t('components.treeList.deleteItem') }}
+            </el-button>
+          </el-button-group>
+        </div>
+        <div v-show="showMenu" class="bottom-menu">
+          <el-button-group>
+            <el-button class="menu" size="mini" icon="el-icon-plus" @click="addItem">
+            </el-button>
+            <el-button class="menu" size="mini" icon="el-icon-edit" @click="updateItem">
+            </el-button>
+            <el-button class="menu" size="mini" icon="el-icon-delete" @click="deleteItem">
+            </el-button>
+          </el-button-group>
+        </div>
+      </div>
+    </el-col>
+    <el-col :span="20">
+      <div class="tree-right">
+        <slot />
+      </div>
+    </el-col>
+  </el-row>
 </template>
 
 <script>
@@ -52,51 +69,15 @@ export default {
       required: false,
       default: true
     },
+    showMenu: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
     showIcon: {
       type: Boolean,
       required: false,
-      default: true
-    },
-    showCheckBox: {
-      type: Boolean,
-      required: false,
       default: false
-    },
-    enableParentCheck: {
-      type: Boolean,
-      required: false,
-      default: false
-    },
-    enableClickCheck: {
-      type: Boolean,
-      required: false,
-      default: false
-    },
-    disableRightClick: {
-      type: Boolean,
-      required: false,
-      default: false
-    },
-    disableParentNode: {
-      type: Boolean,
-      required: false,
-      default: false
-    },
-    nodeKey: {
-      type: String,
-      required: false,
-      default: 'id'
-    },
-    defaultProps: {
-      type: Object,
-      required: false,
-      default: () => {
-        return {
-          label: (data, node) => {
-            return data.label || data.name
-          }
-        }
-      }
     }
   },
   data() {
@@ -106,134 +87,117 @@ export default {
       showRightMenu: false,
       top: 0,
       left: 0,
-      clickedNode: null
+      clickedItem: ''
     }
   },
   watch: {
+    data() {
+      this.filterTable()
+    },
     filterText(val) {
-      this.$refs.tree.filter(val)
-    }
-  },
-  created() {
-    this.defaultProps.disabled = (data, node) => {
-      if (this.disableParentNode && data.child) {
-        return data.child.length > 0
-      }
-      if (this.disableParentNode && data.children) {
-        return data.children.length > 0
-      }
-      return false
+      this.filterTable(val)
     }
   },
   methods: {
-    filterNode(value, data) {
-      console.log(value, data)
-      if (!value) return true
-      if (data.label) {
-        return data.label.indexOf(value) !== -1
-      }
-      if (data.name) {
-        return data.name.indexOf(value) !== -1
-      }
-      return false
+    filterTable() {
+      this.filterData = this.data.filter(item => {
+        if (!this.filterText) return true
+        if (this.filterText) {
+          return item.name.toLowerCase().indexOf(this.filterText.toLowerCase()) > -1
+        }
+      })
     },
-    nodeCheck(data, node, co) {
-      console.log(data, node, co)
-      this.clickedNode = data
-      this.$emit('node-check', data, node)
-    },
-    nodeClick(data, node, co) {
-      console.log(data, node, co)
+    itemClick(item) {
+      if (this.showMenu) return
       this.closeRightMenu()
-      this.clickedNode = data
-      this.$emit('node-click', data, node)
+      this.clickedItem = item
+      this.$emit('itemClick', item)
     },
-    rightClick(e, data, node, co) {
-      if (this.disableRightClick) {
-        return
-      }
-      console.log(data, node, co)
+    rightClick(item, e) {
+      if (this.showMenu) return
       this.top = e.clientY
       this.left = e.clientX
+      this.clickedItem = item
       this.showRightMenu = true
-      this.clickedNode = data
-      this.$emit('right-click', data)
+      this.$emit('rightClick', item)
     },
     closeRightMenu() {
       this.showRightMenu = false
     },
-    appendNode() {
-      this.$emit('append-node', this.clickedNode)
-      this.closeRightMenu()
+    addItem() {
+      this.$emit('addItem')
     },
-    updateNode() {
-      this.$emit('update-node', this.clickedNode)
-      this.closeRightMenu()
+    updateItem() {
+      this.$emit('updateItem', this.clickedItem)
     },
-    deleteNode() {
-      this.$emit('delete-node', this.clickedNode)
-      this.closeRightMenu()
-    },
-    getCheckedKeys() {
-      return this.$refs.tree.getCheckedKeys()
-    },
-    setCheckedKeys(keys) {
-      this.$refs.tree.setCheckedKeys(keys)
-    },
-    getCheckedNodes() {
-      return this.$refs.tree.getCheckedNodes()
-    },
-    getHalfCheckedKeys() {
-      return this.$refs.tree.getHalfCheckedKeys()
+    deleteItem() {
+      this.$emit('deleteItem', this.clickedItem)
     }
   }
 }
 </script>
 
 <style lang="scss">
-.tree-list {
-  padding: 10px;
-  width: 100%;
-  height: 100%;
-  border: 1px solid #dddddd;
-  border-radius: 4px;
-  .filter-input {
-    margin-bottom: 10px;
-    .el-input__inner {
-      border-radius: 20px;
-    }
-  }
-  .filter-tree {
+  .tree-list {
     width: 100%;
-    height: 100%;
+    height: calc(100vh - 124px);
     border: 1px solid #dddddd;
     border-radius: 4px;
-    overflow: scroll;
-  }
-  .filter-tree.has-input {
-    height: calc(100% - 46px);
-  }
-  .right-menu {
-    position: fixed;
-    width: 80px;
-    height: 90px;
-    z-index: 999;
-    .menu {
-      border-radius: 0;
+    .filter-tree {
+      width: 100%;
+      height: 100%;
+      border: 1px solid #dddddd;
+      border-radius: 4px;
+      overflow: scroll;
+      .el-card__body {
+        padding: 0 20px;
+      }
+      .item {
+        padding: 5px 0;
+        width: max-content;
+        min-width: 156px;
+        height: 26px;
+        line-height: 16px;
+        font-size: 14px;
+        cursor: pointer;
+        .name {
+          margin-left: 5px;
+        }
+      }
+      .item:hover {
+        background-color: #eeeeee;
+      }
+      .item.active {
+        background-color: #eeeeee;
+      }
+    }
+    .filter-tree.has-input.has-menu {
+      height: calc(100% - 68px);
+    }
+    .filter-tree.has-input {
+      height: calc(100% - 40px);
+    }
+    .filter-tree.has-menu {
+      height: calc(100% - 28px);
+    }
+    .right-menu {
+      position: fixed;
+      width: 80px;
+      height: 90px;
+      z-index: 999;
+      .menu {
+        border-radius: 0;
+      }
+    }
+    .bottom-menu {
+      text-align: center;
+      .menu {
+        width: 60px;
+      }
     }
   }
-  .bottom-menu {
-    text-align: center;
+  .tree-right {
+    padding-left: 20px;
+    height: calc(100vh - 124px);
   }
-}
-</style>
-
-<style>
-.tree {
-  height: 100%;
-}
-.el-tree {
-  min-width: 100%;
-  display:inline-block !important;
-}
 </style>

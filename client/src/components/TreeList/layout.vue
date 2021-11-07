@@ -34,11 +34,13 @@ export default {
 <style scoped>
 .tree-left {
   width: 100%;
-  height: calc(100vh - 20px);
+  height: calc(100vh - 124px);
+  max-height: calc(100vh);
 }
 .tree-right {
   padding-left: 20px;
   width: 100%;
-  height: calc(100vh - 20px);
+  height: calc(100vh - 124px);
+  overflow-y: auto;
 }
 </style>

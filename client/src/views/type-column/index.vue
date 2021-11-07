@@ -1,42 +1,44 @@
 <template>
   <div class="page-container">
-    <tree-list
-      ref="treeList"
-      :data="languageList"
-      @itemClick="handleItemClick"
-      @addItem="handleLanguage"
-      @updateItem="handleLanguage"
-      @deleteItem="handleLanguageDelete"
-    >
-      <el-form :model="listQuery" :inline="true" label-width="100px" label-suffix=":">
-        <el-row>
-          <el-form-item :label="$t('typeColumn.listQuery.dbType')">
-            <el-select v-model="listQuery.dbType" :placeholder="$t('typeColumn.listQuery.placeholderDbType')" style="width: 200px">
-              <el-option v-for="(item) in dbTypeList" :key="item.id" :label="item.name" :value="item.id" />
-            </el-select>
-          </el-form-item>
-          <el-form-item :label="$t('typeColumn.listQuery.columnType')">
-            <el-input v-model="listQuery.columnType" :placeholder="$t('typeColumn.listQuery.placeholderColumnType')" />
-          </el-form-item>
-          <el-form-item :label="$t('typeColumn.listQuery.fieldType')">
-            <el-input v-model="listQuery.fieldType" :placeholder="$t('typeColumn.listQuery.placeholderFieldType')" />
-          </el-form-item>
-        </el-row>
-        <el-row style="text-align: center">
-          <el-form-item>
-            <el-button type="primary" size="mini" icon="el-icon-search" @click="handleFilter">{{ $t('typeColumn.listButton.search') }}</el-button>
-            <el-button type="primary" size="mini" icon="el-icon-refresh" @click="handleReset">{{ $t('typeColumn.listButton.reset') }}</el-button>
-            <el-button type="primary" size="mini" icon="el-icon-plus" @click="handleDetail()">{{ $t('typeColumn.listButton.add') }}</el-button>
-          </el-form-item>
-        </el-row>
-      </el-form>
+    <tree-layout>
+      <template v-slot:left>
+        <tree-list
+          ref="treeList"
+          :data="languageList"
+          @node-click="handleItemClick"
+          @append-node="handleLanguageCreate"
+          @update-node="handleLanguageUpdate"
+          @delete-node="handleLanguageDelete"
+        />
+      </template>
+      <template v-slot:right>
+        <el-form :model="listQuery" :inline="true" label-width="100px" label-suffix=":">
+          <el-row>
+            <el-form-item :label="$t('typeColumn.listQuery.dbType')">
+              <el-select v-model="listQuery.dbType" :placeholder="$t('typeColumn.listQuery.placeholderDbType')" style="width: 200px">
+                <el-option v-for="(item) in dbTypeList" :key="item.id" :label="item.name" :value="item.id" />
+              </el-select>
+            </el-form-item>
+            <el-form-item :label="$t('typeColumn.listQuery.columnType')">
+              <el-input v-model="listQuery.columnType" :placeholder="$t('typeColumn.listQuery.placeholderColumnType')" />
+            </el-form-item>
+            <el-form-item :label="$t('typeColumn.listQuery.fieldType')">
+              <el-input v-model="listQuery.fieldType" :placeholder="$t('typeColumn.listQuery.placeholderFieldType')" />
+            </el-form-item>
+          </el-row>
+          <el-row style="text-align: center">
+            <el-form-item>
+              <el-button type="primary" size="mini" icon="el-icon-search" @click="handleFilter">{{ $t('typeColumn.listButton.search') }}</el-button>
+              <el-button type="primary" size="mini" icon="el-icon-refresh" @click="handleReset">{{ $t('typeColumn.listButton.reset') }}</el-button>
+              <el-button type="primary" size="mini" icon="el-icon-plus" @click="handleDetail()">{{ $t('typeColumn.listButton.add') }}</el-button>
+            </el-form-item>
+          </el-row>
+        </el-form>
 
-      <div style="height: calc(100% - 220px);">
         <el-table
           :key="tableKey"
           v-loading="listLoading"
           :data="list"
-          height="100%"
           highlight-current-row
           border="border"
         >
@@ -62,58 +64,64 @@
             </template>
           </el-table-column>
         </el-table>
-      </div>
 
-      <pagination v-show="total>0" :total="total" :page.sync="listQuery.pageNum" :limit.sync="listQuery.pageSize" @pagination="getList" />
-    </tree-list>
+        <pagination
+          v-show="total>0"
+          :total="total"
+          :page.sync="listQuery.pageNum"
+          :limit.sync="listQuery.pageSize"
+          @pagination="getList"
+        />
 
-    <el-dialog
-      :title="typeColumn.id ? $t('typeColumn.item.editTitle') : $t('typeColumn.item.addTitle')"
-      :visible.sync="dialogFormVisible"
-      @close="handleFormClose('typeColumnForm')"
-    >
-      <el-form ref="typeColumnForm" :model="typeColumn" :rules="typeColumnRules()" label-width="120px" label-suffix=":">
-        <el-form-item :label="$t('typeColumn.item.languageType')" prop="languageId">
-          <el-select v-model="typeColumn.languageId" :placeholder="$t('typeColumn.item.placeholderLanguageType')">
-            <el-option v-for="(item) in languageList" :key="item.id" :label="item.name" :value="item.id" />
-          </el-select>
-        </el-form-item>
-        <el-form-item :label="$t('typeColumn.item.dbType')" prop="dbType">
-          <el-select v-model="typeColumn.dbType" :placeholder="$t('typeColumn.item.placeholderDbType')">
-            <el-option v-for="(item) in dbTypeList" :key="item.id" :label="item.name" :value="item.id" />
-          </el-select>
-        </el-form-item>
-        <el-form-item :label="$t('typeColumn.item.columnType')" prop="columnType">
-          <el-input v-model="typeColumn.columnType" :placeholder="$t('typeColumn.item.placeholderColumnType')" @blur="checkTypeColumn" />
-        </el-form-item>
-        <el-form-item :label="$t('typeColumn.item.fieldType')" prop="fieldType">
-          <el-input v-model="typeColumn.fieldType" :placeholder="$t('typeColumn.item.placeholderFieldType')" />
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="handleFormClose('typeColumnForm')">{{ $t('common.form.cancel') }}</el-button>
-        <el-button type="primary" @click="handleFormSubmit('typeColumnForm')">{{ $t('common.form.confirm') }}</el-button>
-      </span>
-    </el-dialog>
+        <el-dialog
+          :title="typeColumn.id ? $t('typeColumn.item.editTitle') : $t('typeColumn.item.addTitle')"
+          :visible.sync="dialogFormVisible"
+          @close="handleFormClose('typeColumnForm')"
+        >
+          <el-form ref="typeColumnForm" :model="typeColumn" :rules="typeColumnRules()" label-width="120px" label-suffix=":">
+            <el-form-item :label="$t('typeColumn.item.languageType')" prop="languageId">
+              <el-select v-model="typeColumn.languageId" :placeholder="$t('typeColumn.item.placeholderLanguageType')">
+                <el-option v-for="(item) in languageList" :key="item.id" :label="item.name" :value="item.id" />
+              </el-select>
+            </el-form-item>
+            <el-form-item :label="$t('typeColumn.item.dbType')" prop="dbType">
+              <el-select v-model="typeColumn.dbType" :placeholder="$t('typeColumn.item.placeholderDbType')">
+                <el-option v-for="(item) in dbTypeList" :key="item.id" :label="item.name" :value="item.id" />
+              </el-select>
+            </el-form-item>
+            <el-form-item :label="$t('typeColumn.item.columnType')" prop="columnType">
+              <el-input v-model="typeColumn.columnType" :placeholder="$t('typeColumn.item.placeholderColumnType')" @blur="checkTypeColumn" />
+            </el-form-item>
+            <el-form-item :label="$t('typeColumn.item.fieldType')" prop="fieldType">
+              <el-input v-model="typeColumn.fieldType" :placeholder="$t('typeColumn.item.placeholderFieldType')" />
+            </el-form-item>
+          </el-form>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="handleFormClose('typeColumnForm')">{{ $t('common.form.cancel') }}</el-button>
+            <el-button type="primary" @click="handleFormSubmit('typeColumnForm')">{{ $t('common.form.confirm') }}</el-button>
+          </span>
+        </el-dialog>
 
-    <el-dialog
-      :title="language.id ? $t('typeColumn.language.editTitle') : $t('typeColumn.language.addTitle')"
-      :visible.sync="dialogFormVisible2"
-      @close="handleForm2Close('languageForm')"
-    >
-      <el-form ref="languageForm" :model="language" :rules="languageRules()" label-width="120px" label-suffix=":">
-        <el-form-item :label="$t('typeColumn.language.name')" prop="name">
-          <el-input v-model="language.name" :placeholder="$t('typeColumn.language.placeholderName')" @blur="checkLanguage" />
-        </el-form-item>
-        <el-form-item :label="$t('typeColumn.language.desc')" prop="desc">
-          <el-input v-model="language.desc" :placeholder="$t('typeColumn.language.placeholderDesc')" />
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="handleForm2Close('languageForm')">{{ $t('common.form.cancel') }}</el-button>
-        <el-button type="primary" @click="handleForm2Submit('languageForm')">{{ $t('common.form.confirm') }}</el-button>
-      </span>
-    </el-dialog>
+        <el-dialog
+          :title="language.id ? $t('typeColumn.language.editTitle') : $t('typeColumn.language.addTitle')"
+          :visible.sync="dialogFormVisible2"
+          @close="handleForm2Close('languageForm')"
+        >
+          <el-form ref="languageForm" :model="language" :rules="languageRules()" label-width="120px" label-suffix=":">
+            <el-form-item :label="$t('typeColumn.language.name')" prop="name">
+              <el-input v-model="language.name" :placeholder="$t('typeColumn.language.placeholderName')" @blur="checkLanguage" />
+            </el-form-item>
+            <el-form-item :label="$t('typeColumn.language.desc')" prop="desc">
+              <el-input v-model="language.desc" :placeholder="$t('typeColumn.language.placeholderDesc')" />
+            </el-form-item>
+          </el-form>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="handleForm2Close('languageForm')">{{ $t('common.form.cancel') }}</el-button>
+            <el-button type="primary" @click="handleForm2Submit('languageForm')">{{ $t('common.form.confirm') }}</el-button>
+          </span>
+        </el-dialog>
+      </template>
+    </tree-layout>
   </div>
 </template>
 
@@ -123,11 +131,13 @@ import { typeLanguageList, typeLanguageSelect, typeLanguageCheck, typeLanguageIn
 import { allDbType } from '@/api/type-column'
 import Pagination from '@/components/Pagination/index'
 import TreeList from '@/components/TreeList/index'
+import TreeLayout from '@/components/TreeList/layout'
 export default {
   name: 'TypeColumn',
   components: {
     Pagination,
-    TreeList
+    TreeList,
+    TreeLayout
   },
   data() {
     return {
@@ -149,6 +159,7 @@ export default {
         id: '',
         languageId: '',
         dbType: null,
+        dbName: '',
         columnType: '',
         fieldType: ''
       },
@@ -263,30 +274,18 @@ export default {
     getLanguageList() {
       typeLanguageList({}).then(res => {
         this.languageList = res.data
-        this.$refs.treeList.$data.clickedItem = ''
-        this.languageList.map(item => {
-          item.rightMenu = true
-          if (item.id === this.listQuery.languageId) {
-            item.active = true
-          }
-        })
-        this.languageList[0].active = true
-        this.listQuery.languageId = this.languageList[0].id
         this.getList()
       })
     },
     handleItemClick(item) {
-      this.languageList = this.languageList.map(language => {
-        language.active = false
-        if (language.id === item.id) {
-          language.active = true
-          this.listQuery.languageId = item.id
-          this.getList()
-        }
-        return language
-      })
+      this.listQuery.languageId = item.id
+      this.getList()
     },
-    handleLanguage(item) {
+    handleLanguageCreate() {
+      this.dialogFormVisible2 = true
+      this.language = {}
+    },
+    handleLanguageUpdate(item) {
       this.dialogFormVisible2 = true
       this.language = {}
       if (item && item.id) {

@@ -1,35 +1,37 @@
 <template>
   <div class="page-container">
-    <tree-list
-      ref="treeList"
-      :data="typeList"
-      :show-search="false"
-      @itemClick="handleItemClick"
-    >
-      <el-form :model="listQuery" :inline="true" label-width="120px" label-suffix=":">
-        <el-row>
-          <el-form-item :label="$t('templateField.listQuery.name')">
-            <el-input v-model="listQuery.name" :placeholder="$t('templateField.listQuery.placeholderName')" />
-          </el-form-item>
-          <el-form-item :label="$t('templateField.listQuery.desc')">
-            <el-input v-model="listQuery.desc" :placeholder="$t('templateField.listQuery.placeholderDesc')" />
-          </el-form-item>
-        </el-row>
-        <el-row style="text-align: center">
-          <el-form-item>
-            <el-button type="primary" size="mini" icon="el-icon-search" @click="handleFilter">{{ $t('templateField.listButton.search') }}</el-button>
-            <el-button type="primary" size="mini" icon="el-icon-refresh" @click="handleReset">{{ $t('templateField.listButton.reset') }}</el-button>
-            <el-button type="primary" size="mini" icon="el-icon-plus" @click="handleDetail()">{{ $t('templateField.listButton.add') }}</el-button>
-          </el-form-item>
-        </el-row>
-      </el-form>
+    <tree-layout>
+      <template v-slot:left>
+        <tree-list
+          ref="treeList"
+          :data="typeList"
+          :show-search="false"
+          @node-click="handleItemClick"
+        />
+      </template>
+      <template v-slot:right>
+        <el-form :model="listQuery" :inline="true" label-width="120px" label-suffix=":">
+          <el-row>
+            <el-form-item :label="$t('templateField.listQuery.name')">
+              <el-input v-model="listQuery.name" :placeholder="$t('templateField.listQuery.placeholderName')" />
+            </el-form-item>
+            <el-form-item :label="$t('templateField.listQuery.desc')">
+              <el-input v-model="listQuery.desc" :placeholder="$t('templateField.listQuery.placeholderDesc')" />
+            </el-form-item>
+          </el-row>
+          <el-row style="text-align: center">
+            <el-form-item>
+              <el-button type="primary" size="mini" icon="el-icon-search" @click="handleFilter">{{ $t('templateField.listButton.search') }}</el-button>
+              <el-button type="primary" size="mini" icon="el-icon-refresh" @click="handleReset">{{ $t('templateField.listButton.reset') }}</el-button>
+              <el-button type="primary" size="mini" icon="el-icon-plus" @click="handleDetail()">{{ $t('templateField.listButton.add') }}</el-button>
+            </el-form-item>
+          </el-row>
+        </el-form>
 
-      <div style="height: calc(100% - 220px);">
         <el-table
           :key="tableKey"
           v-loading="listLoading"
           :data="list"
-          height="100%"
           highlight-current-row
           border="border"
         >
@@ -55,32 +57,38 @@
             </template>
           </el-table-column>
         </el-table>
-      </div>
 
-      <pagination v-show="total>0" :total="total" :page.sync="listQuery.pageNum" :limit.sync="listQuery.pageSize" @pagination="getList" />
-    </tree-list>
+        <pagination
+          v-show="total>0"
+          :total="total"
+          :page.sync="listQuery.pageNum"
+          :limit.sync="listQuery.pageSize"
+          @pagination="getList"
+        />
 
-    <el-dialog
-      :title="templateField.id ? $t('templateField.item.editTitle') : $t('templateField.item.addTitle')"
-      :visible.sync="dialogFormVisible"
-      @close="handleFormClose('templateFieldForm')"
-    >
-      <el-form ref="templateFieldForm" :model="templateField" :rules="templateFieldRules()" label-width="120px" label-suffix=":">
-        <el-form-item :label="$t('templateField.item.name')" prop="name">
-          <el-input v-model="templateField.name" :placeholder="$t('templateField.item.placeholderName')" @blur="checkField" />
-        </el-form-item>
-        <el-form-item :label="$t('templateField.item.desc')">
-          <el-input v-model="templateField.desc" :placeholder="$t('templateField.item.placeholderDesc')" />
-        </el-form-item>
-        <el-form-item :label="$t('templateField.item.value')" prop="value">
-          <el-input v-model="templateField.value" :placeholder="$t('templateField.item.placeholderValue')" />
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="handleFormClose('templateFieldForm')">{{ $t('common.form.cancel') }}</el-button>
-        <el-button type="primary" @click="handleFormSubmit('templateFieldForm')">{{ $t('common.form.confirm') }}</el-button>
-      </span>
-    </el-dialog>
+        <el-dialog
+          :title="templateField.id ? $t('templateField.item.editTitle') : $t('templateField.item.addTitle')"
+          :visible.sync="dialogFormVisible"
+          @close="handleFormClose('templateFieldForm')"
+        >
+          <el-form ref="templateFieldForm" :model="templateField" :rules="templateFieldRules()" label-width="120px" label-suffix=":">
+            <el-form-item :label="$t('templateField.item.name')" prop="name">
+              <el-input v-model="templateField.name" :placeholder="$t('templateField.item.placeholderName')" @blur="checkField" />
+            </el-form-item>
+            <el-form-item :label="$t('templateField.item.desc')">
+              <el-input v-model="templateField.desc" :placeholder="$t('templateField.item.placeholderDesc')" />
+            </el-form-item>
+            <el-form-item :label="$t('templateField.item.value')" prop="value">
+              <el-input v-model="templateField.value" :placeholder="$t('templateField.item.placeholderValue')" />
+            </el-form-item>
+          </el-form>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="handleFormClose('templateFieldForm')">{{ $t('common.form.cancel') }}</el-button>
+            <el-button type="primary" @click="handleFormSubmit('templateFieldForm')">{{ $t('common.form.confirm') }}</el-button>
+          </span>
+        </el-dialog>
+      </template>
+    </tree-layout>
   </div>
 </template>
 
@@ -88,11 +96,13 @@
 import { templateFieldList, templateFieldSelect, templateFieldInsert, templateFieldUpdate, templateFieldDelete, templateFieldCheck } from '@/api/template-field'
 import Pagination from '@/components/Pagination/index'
 import TreeList from '@/components/TreeList/index'
+import TreeLayout from '@/components/TreeList/layout'
 export default {
   name: 'TemplateField',
   components: {
     Pagination,
-    TreeList
+    TreeList,
+    TreeLayout
   },
   data() {
     return {
@@ -163,21 +173,12 @@ export default {
           { id: 1, name: this.$t('templateField.table.type1') },
           { id: 2, name: this.$t('templateField.table.type2') }
         ]
-        this.typeList[0].active = true
-        this.listQuery.type = this.typeList[0].id
         this.getList()
       }, 100)
     },
     handleItemClick(item) {
-      this.typeList = this.typeList.map(type => {
-        type.active = false
-        if (type.name === item.name) {
-          type.active = true
-          this.listQuery.type = type.id
-          this.getList()
-        }
-        return type
-      })
+      this.listQuery.type = item.id
+      this.getList()
     },
     handleDetail(id) {
       this.dialogFormVisible = true

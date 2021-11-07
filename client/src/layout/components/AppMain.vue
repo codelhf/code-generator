@@ -25,7 +25,7 @@ export default {
 <style lang="scss" scoped>
 .app-main {
   /*50 = navbar  */
-  padding: 20px;
+  padding: 20px 0 20px 20px;
   min-height: calc(100vh - 70px);
   width: 100%;
   position: relative;
@@ -52,5 +52,16 @@ export default {
   .fixed-header {
     padding-right: 15px;
   }
+}
+.el-form--inline {
+  .el-input,
+  .el-input-number,
+  .el-textarea,
+  .el-select {
+    width: 220px;
+  }
+}
+.el-page-header {
+  margin-bottom: 20px;
 }
 </style>
