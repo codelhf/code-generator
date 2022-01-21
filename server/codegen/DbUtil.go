@@ -42,19 +42,19 @@ func (d *DbUtil) GetAllTable() []model.ProjectTable {
 	var sqlStr string
 	var rows *sql.Rows
 	if d.DbType == model.MySQLType {
-		sqlStr = "SELECT table_name, table_type FROM information_schema.`TABLES` WHERE table_schema = ? ORDER BY table_name, table_type"
+		sqlStr = "SELECT table_name, table_type FROM information_schema.`TABLES` WHERE table_schema = ? ORDER BY table_type, table_name"
 		prepare, err := d.Db.Prepare(sqlStr)
 		checkErr(err)
 		rows, err = prepare.Query(d.DbName)
 		checkErr(err)
 	} else if d.DbType == model.OracleType {
-		sqlStr = "SELECT table_name, table_type FROM user_tab_comments WHERE table_name NOT LIKE '%$0' ORDER BY table_name, table_type"
+		sqlStr = "SELECT table_name, table_type FROM user_tab_comments WHERE table_name NOT LIKE '%$0' ORDER BY table_type, table_name"
 		prepare, err := d.Db.Prepare(sqlStr)
 		checkErr(err)
 		rows, err = prepare.Query()
 		checkErr(err)
 	} else if d.DbType == model.PostgreSQLType {
-		sqlStr = "SELECT * FROM (SELECT tablename AS table_name, 'TABLE' AS table_type FROM pg_tables WHERE schemaname='public' UNION SELECT viewname AS table_name, 'VIEW' AS table_type FROM pg_views WHERE schemaname='public') a ORDER BY table_name, table_type"
+		sqlStr = "SELECT * FROM (SELECT tablename AS table_name, 'TABLE' AS table_type FROM pg_tables WHERE schemaname='public' UNION SELECT viewname AS table_name, 'VIEW' AS table_type FROM pg_views WHERE schemaname='public') a ORDER BY table_type, table_name"
 		prepare, err := d.Db.Prepare(sqlStr)
 		checkErr(err)
 		rows, err = prepare.Query()

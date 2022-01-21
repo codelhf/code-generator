@@ -18,7 +18,7 @@ func (d *ProjectTemplateDao) List(pageNum, pageSize int, projectId string) ([]Pr
 		session.Where("project_id = ?", projectId)
 	}
 	dataList := make([]ProjectTemplate, 0)
-	total, err := session.FindAndCount(&dataList)
+	total, err := session.OrderBy("id asc").FindAndCount(&dataList)
 	util.CheckError(err)
 	var ids []string
 	for i := 0; i < len(dataList); i++ {
@@ -27,7 +27,7 @@ func (d *ProjectTemplateDao) List(pageNum, pageSize int, projectId string) ([]Pr
 	// 查询
 	session.Table("t_template")
 	templateList := make([]Template, 0)
-	err = session.In("id", ids).OrderBy("name").Find(&templateList)
+	err = session.In("id", ids).Find(&templateList)
 	util.CheckError(err)
 	dtoList := toDTO(dataList, templateList)
 	return dtoList, total
@@ -35,12 +35,12 @@ func (d *ProjectTemplateDao) List(pageNum, pageSize int, projectId string) ([]Pr
 
 func toDTO(dataList []ProjectTemplate, templateList []Template) []ProjectTemplateDTO {
 	dtoList := make([]ProjectTemplateDTO, 0)
-	for i := 0; i < len(templateList); i++ {
-		template := templateList[i]
-		for j := 0; j < len(dataList); j++ {
-			data := dataList[j]
+	for i := 0; i < len(dataList); i++ {
+		data := dataList[i]
+		dto := ProjectTemplateDTO{}
+		for j := 0; j < len(templateList); j++ {
+			template := templateList[j]
 			if data.TemplateId == template.Id {
-				dto := ProjectTemplateDTO{}
 				dto.Id = data.Id
 				dto.ProjectId = data.ProjectId
 				dto.GroupId = data.GroupId

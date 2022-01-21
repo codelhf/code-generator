@@ -6,7 +6,6 @@ import (
 	"code-generator-go/server/model"
 	"code-generator-go/server/util"
 	"net/http"
-	"sort"
 )
 
 var projectTableDao model.ProjectTableDao
@@ -26,9 +25,6 @@ func ProjectTableAll(w http.ResponseWriter, r *http.Request) {
 		for i := 0; i < len(data); i++ {
 			data[i].ProjectId = projectId
 		}
-		sort.Slice(data, func(i, j int) bool {
-			return data[i].TableType < data[j].TableType
-		})
 	}
 	common.SuccessData(w, data)
 }
