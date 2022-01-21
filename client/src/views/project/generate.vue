@@ -5,6 +5,7 @@
         <tree-list
           ref="treeList"
           :data="tableList"
+          :node-key="'tableName'"
           :show-icon="true"
           :disable-right-click="true"
           @node-click="handleTableClick"
@@ -99,16 +100,6 @@ export default {
         } else {
           this.currentTable = table
         }
-        this.tableList = this.tableList.map(item => {
-          item.active = false
-          if (item.tableName === this.currentTable.tableName) {
-            item.id = this.currentTable.id
-            item.domainName = this.currentTable.domainName
-            item.domainDesc = this.currentTable.domainDesc
-            item.active = this.currentTable.active = true
-          }
-          return item
-        })
       })
     },
     handleGenerate() {
