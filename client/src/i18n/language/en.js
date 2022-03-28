@@ -325,8 +325,10 @@ export default {
     },
     table: {
       dbType: 'Database',
+      regexpType: 'RegexpType',
       columnType: 'ColumnType',
       fieldType: 'FieldType',
+      jdbcType: 'DataType',
       operation: 'Operate'
     },
     item: {
@@ -336,16 +338,24 @@ export default {
       placeholderLanguageType: 'Please select language type',
       dbType: 'Database',
       placeholderDbType: 'Please select database type',
+      regexpType: 'RegexpType',
+      placeholderRegexpType: 'Please select regexp type',
+      regexpType1: 'Regexp match',
+      regexpType2: 'Exact match',
       columnType: 'ColumnType',
       placeholderColumnType: 'Please enter the data column type',
       fieldType: 'FieldType',
-      placeholderFieldType: 'Please enter the field type'
+      placeholderFieldType: 'Please enter the field type',
+      jdbcType: 'DataType',
+      placeholderJdbcType: 'Please enter the data type'
     },
     itemRules: {
       languageType: 'Language type cannot be empty',
       dbType: 'Please select database type',
+      regexpType: 'Please select regexp type',
       columnType: 'Data column type cannot be empty',
-      fieldType: 'Field type cannot be empty'
+      fieldType: 'Field type cannot be empty',
+      jdbcType: 'Data type cannot be empty'
     },
     language: {
       addTitle: 'New Language',

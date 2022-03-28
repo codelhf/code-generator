@@ -47,6 +47,12 @@
               <span>{{ scope.row.dbName }}</span>
             </template>
           </el-table-column>
+          <el-table-column :label="$t('typeColumn.table.regexpType')" align="center">
+            <template slot-scope="scope">
+              <span v-if="scope.row.regexpType === 1">{{ $t('typeColumn.item.regexpType1') }}</span>
+              <span v-if="scope.row.regexpType === 2">{{ $t('typeColumn.item.regexpType2') }}</span>
+            </template>
+          </el-table-column>
           <el-table-column :label="$t('typeColumn.table.columnType')" align="center">
             <template slot-scope="scope">
               <span>{{ scope.row.columnType }}</span>
@@ -55,6 +61,11 @@
           <el-table-column :label="$t('typeColumn.table.fieldType')" align="center">
             <template slot-scope="scope">
               <span>{{ scope.row.fieldType }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column :label="$t('typeColumn.table.jdbcType')" align="center">
+            <template slot-scope="scope">
+              <span>{{ scope.row.jdbcType }}</span>
             </template>
           </el-table-column>
           <el-table-column :label="$t('typeColumn.table.operation')" align="center" width="160">
@@ -89,11 +100,20 @@
                 <el-option v-for="(item) in dbTypeList" :key="item.id" :label="item.name" :value="item.id" />
               </el-select>
             </el-form-item>
+            <el-form-item :label="$t('typeColumn.item.regexpType')" prop="regexpType">
+              <el-select v-model="typeColumn.regexpType" :placeholder="$t('typeColumn.item.placeholderRegexpType')">
+                <el-option :label="$t('typeColumn.item.regexpType1')" :value="1" />
+                <el-option :label="$t('typeColumn.item.regexpType2')" :value="2" />
+              </el-select>
+            </el-form-item>
             <el-form-item :label="$t('typeColumn.item.columnType')" prop="columnType">
               <el-input v-model="typeColumn.columnType" :placeholder="$t('typeColumn.item.placeholderColumnType')" @blur="checkTypeColumn" />
             </el-form-item>
             <el-form-item :label="$t('typeColumn.item.fieldType')" prop="fieldType">
               <el-input v-model="typeColumn.fieldType" :placeholder="$t('typeColumn.item.placeholderFieldType')" />
+            </el-form-item>
+            <el-form-item :label="$t('typeColumn.item.jdbcType')" prop="jdbcType">
+              <el-input v-model="typeColumn.jdbcType" :placeholder="$t('typeColumn.item.placeholderJdbcType')" />
             </el-form-item>
           </el-form>
           <span slot="footer" class="dialog-footer">
@@ -160,8 +180,10 @@ export default {
         languageId: '',
         dbType: null,
         dbName: '',
+        regexpType: '',
         columnType: '',
-        fieldType: ''
+        fieldType: '',
+        jdbcType: ''
       },
       languageList: [],
       dialogFormVisible2: false,
@@ -181,10 +203,12 @@ export default {
   methods: {
     typeColumnRules() {
       return {
-        dbType: [{ required: true, message: this.$t('typeColumn.itemRules.dbType'), trigger: 'blur' }],
-        columnType: [{ required: true, message: this.$t('typeColumn.itemRules.columnType'), trigger: 'blur' }],
         languageId: [{ required: true, message: this.$t('typeColumn.itemRules.languageType'), trigger: 'blur' }],
-        fieldType: [{ required: true, message: this.$t('typeColumn.itemRules.fieldType'), trigger: 'blur' }]
+        dbType: [{ required: true, message: this.$t('typeColumn.itemRules.dbType'), trigger: 'blur' }],
+        regexpType: [{ required: true, message: this.$t('typeColumn.itemRules.regexpType'), trigger: 'blur' }],
+        columnType: [{ required: true, message: this.$t('typeColumn.itemRules.columnType'), trigger: 'blur' }],
+        fieldType: [{ required: true, message: this.$t('typeColumn.itemRules.fieldType'), trigger: 'blur' }],
+        jdbcType: [{ required: true, message: this.$t('typeColumn.itemRules.jdbcType'), trigger: 'blur' }]
       }
     },
     getList() {

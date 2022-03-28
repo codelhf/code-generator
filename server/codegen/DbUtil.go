@@ -4,8 +4,11 @@ import (
 	"code-generator-go/server/model"
 	"code-generator-go/server/util"
 	"database/sql"
+	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq"
+	"regexp"
+
 	//_ "github.com/mattn/go-oci8"
 	"strings"
 )
@@ -205,41 +208,56 @@ func ColumnName2PropertyName(columnName string) string {
 }
 
 /**
- * 数据库列类型转换为实体的列类型
+ * 数据库列类型转换为实体的属性类型
  */
-func SqlTypeToColumnType(sqlType string, typeList []model.TypeColumn) string {
+func ColumnTypeToFieldType(columnType string, typeList []model.TypeColumn) string {
 	for i := 0; i < len(typeList); i++ {
 		typeItem := typeList[i]
-		if strings.EqualFold(strings.ToLower(sqlType), strings.ToLower(typeItem.ColumnType)) {
-			if strings.EqualFold("varchar", strings.ToLower(sqlType)) {
-				return "VARCHAR"
+		// 正则匹配
+		if typeItem.RegexpType == 1 {
+			reg := regexp.MustCompile(typeItem.ColumnType)
+			if reg == nil {
+				fmt.Println("MustCompile err")
+				return ""
 			}
-			if strings.EqualFold("int", strings.ToLower(sqlType)) {
-				return "INTEGER"
+			result := reg.FindAllStringSubmatch(columnType, -1)
+			if result != nil {
+				return typeItem.FieldType
 			}
-			if strings.EqualFold("datetime", strings.ToLower(sqlType)) {
-				return "TIMESTAMP"
+		}
+		// 精确匹配
+		if typeItem.RegexpType == 2 {
+			if strings.EqualFold(strings.ToLower(columnType), strings.ToLower(typeItem.ColumnType)) {
+				return typeItem.FieldType
 			}
-			if strings.EqualFold("decimal", strings.ToLower(sqlType)) {
-				return "DECIMAL"
-			}
-			if strings.EqualFold("text", strings.ToLower(sqlType)) {
-				return "VARCHAR"
-			}
-			return typeItem.ColumnType
 		}
 	}
 	return ""
 }
 
 /**
- * 数据库列类型转换为实体的属性类型
+ * 数据库列类型转换为实体的列类型
  */
-func SqlTypeToFieldType(sqlType string, typeList []model.TypeColumn) string {
+func ColumnTypeToJdbcType(columnType string, typeList []model.TypeColumn) string {
 	for i := 0; i < len(typeList); i++ {
 		typeItem := typeList[i]
-		if strings.EqualFold(strings.ToLower(sqlType), strings.ToLower(typeItem.ColumnType)) {
-			return typeItem.FieldType
+		// 正则匹配
+		if typeItem.RegexpType == 1 {
+			reg := regexp.MustCompile(typeItem.ColumnType)
+			if reg == nil {
+				fmt.Println("MustCompile err")
+				return ""
+			}
+			result := reg.FindAllStringSubmatch(columnType, -1)
+			if result != nil {
+				return typeItem.JdbcType
+			}
+		}
+		// 精确匹配
+		if typeItem.RegexpType == 2 {
+			if strings.EqualFold(strings.ToLower(columnType), strings.ToLower(typeItem.ColumnType)) {
+				return typeItem.JdbcType
+			}
 		}
 	}
 	return ""

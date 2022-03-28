@@ -31,8 +31,10 @@ func TypeColumnList(w http.ResponseWriter, r *http.Request) {
 		dataDTO.Id = typeColumn.Id
 		dataDTO.LanguageId = typeColumn.LanguageId
 		dataDTO.DbType = typeColumn.DbType
+		dataDTO.RegexpType = typeColumn.RegexpType
 		dataDTO.ColumnType = typeColumn.ColumnType
 		dataDTO.FieldType = typeColumn.FieldType
+		dataDTO.JdbcType = typeColumn.JdbcType
 		for _, dbType := range dbTypeList {
 			if dataDTO.DbType == dbType.Id {
 				dataDTO.DbName = dbType.Name

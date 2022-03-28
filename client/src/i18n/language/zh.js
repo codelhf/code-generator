@@ -325,8 +325,10 @@ export default {
     },
     table: {
       dbType: '数据库类型',
-      columnType: '数据列类型',
+      regexpType: '匹配类型',
+      columnType: '列类型',
       fieldType: '字段类型',
+      jdbcType: '数据类型',
       operation: '操作'
     },
     item: {
@@ -334,18 +336,26 @@ export default {
       editTitle: '编辑列类型',
       dbType: '数据库类型',
       placeholderDbType: '请选择数据库类型',
+      regexpType: '匹配类型',
+      placeholderRegexpType: '请选择匹配类型',
+      regexpType1: '正则匹配',
+      regexpType2: '精确匹配',
       columnType: '数据列类型',
       placeholderColumnType: '请输入数据列类型',
       languageType: '语言类型',
       placeholderLanguageType: '选择语言类型',
       fieldType: '字段类型',
-      placeholderFieldType: '请输入字段类型'
+      placeholderFieldType: '请输入字段类型',
+      jdbcType: '数据类型',
+      placeholderJdbcType: '请输入数据类型'
     },
     itemRules: {
       dbType: '请选择数据库类型',
+      regexpType: '请选择匹配类型',
       columnType: '数据列类型不能为空',
       languageType: '语言类型不能为空',
-      fieldType: '字段类型不能为空'
+      fieldType: '字段类型不能为空',
+      jdbcType: '数据类型不能为空'
     },
     language: {
       addTitle: '新增语言',
