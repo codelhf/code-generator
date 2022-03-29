@@ -59,8 +59,14 @@ func (d *ProjectTableDao) Update(id string, table ProjectTable) bool {
 // 数据库表名修改相当于新增表，表配置新增即可
 func (d *ProjectTableDao) Delete(projectId string, ids []string) bool {
 	session := db.Engine.Table("t_project_table")
+	if util.IsNotBlank(projectId) {
+		session.Where("project_id = ?", projectId)
+	}
+	if len(ids) > 0 {
+		session.In("id", ids)
+	}
 	var table ProjectTable
-	affected, err := session.Where("project_id = ?", projectId).In("id", ids).Delete(&table)
+	affected, err := session.Delete(&table)
 	util.CheckError(err)
 	return affected >= 1
 }

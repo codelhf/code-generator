@@ -107,8 +107,11 @@ func (d *ProjectTemplateDao) Delete(projectId string, ids []string) bool {
 	if util.IsNotBlank(projectId) {
 		session.Where("project_id = ?", projectId)
 	}
+	if len(ids) > 0 {
+		session.In("id", ids)
+	}
 	var pTemplate ProjectTemplate
-	affected, err := session.In("id", ids).Delete(&pTemplate)
+	affected, err := session.Delete(&pTemplate)
 	util.CheckError(err)
 	return affected >= 1
 }
