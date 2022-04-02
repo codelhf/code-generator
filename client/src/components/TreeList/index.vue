@@ -12,15 +12,26 @@
         :check-strictly="!enableParentCheck"
         :check-on-click-node="enableClickCheck"
         :filter-node-method="filterNode"
+        :highlight-current="true"
         @check-change="nodeCheck"
         @node-click="nodeClick"
         @node-contextmenu="rightClick"
       >
         <span slot-scope="{ node }" class="custom-tree-node">
           <span v-if="showIcon">
-            <i v-if="node.data.child && node.data.child.length > 0" :class="node.expanded ? 'el-icon-folder-opened' : 'el-icon-folder'" />
-            <i v-else-if="node.data.children && node.data.children.length > 0" :class="node.expanded ? 'el-icon-folder-opened' : 'el-icon-folder'" />
-            <svg-icon v-else-if="node.data.table === true || node.data.table === false" class="icon" :icon-class="node.data.table ? 'table': 'view'" />
+            <i
+              v-if="node.data.child && node.data.child.length > 0"
+              :class="node.expanded ? 'el-icon-folder-opened' : 'el-icon-folder'"
+            />
+            <i
+              v-else-if="node.data.children && node.data.children.length > 0"
+              :class="node.expanded ? 'el-icon-folder-opened' : 'el-icon-folder'"
+            />
+            <svg-icon
+              v-else-if="node.data.table === true || node.data.table === false"
+              class="icon"
+              :icon-class="node.data.table ? 'table': 'view'"
+            />
             <i v-else class="el-icon-document" />
             {{ node.data.label ? node.data.label : node.data.name }}
           </span>
@@ -204,12 +215,15 @@ export default {
   height: 100%;
   border: 1px solid #dddddd;
   border-radius: 4px;
+
   .filter-input {
     margin-bottom: 10px;
+
     .el-input__inner {
       //border-radius: 20px;
     }
   }
+
   .filter-tree {
     width: 100%;
     height: 100%;
@@ -217,30 +231,40 @@ export default {
     border-radius: 4px;
     overflow: scroll;
   }
+
   .filter-tree.has-input {
     height: calc(100% - 46px);
   }
+
   .right-menu {
     position: fixed;
     width: 80px;
     height: 90px;
     z-index: 999;
+
     .menu {
       border-radius: 0;
     }
   }
+
   .bottom-menu {
     text-align: center;
   }
 }
 </style>
 
-<style>
+<style lang="scss">
 .tree {
   height: 100%;
 }
 .el-tree {
   min-width: 100%;
-  display:inline-block !important;
+  display: inline-block !important;
+}
+.el-tree--highlight-current .el-tree-node .el-tree-node__content:hover {
+  background-color: #dddddd;
+}
+.el-tree--highlight-current .el-tree-node.is-current .el-tree-node__content {
+  background-color: #dddddd;
 }
 </style>

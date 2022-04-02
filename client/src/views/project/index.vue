@@ -22,7 +22,6 @@
       :key="tableKey"
       v-loading="listLoading"
       :data="list"
-      highlight-current-row
       border="border"
     >
       <el-table-column :label="$t('project.table.name')" align="center">

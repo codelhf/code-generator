@@ -32,7 +32,6 @@
           :key="tableKey"
           v-loading="listLoading"
           :data="list"
-          highlight-current-row
           border="border"
         >
           <el-table-column :label="$t('templateField.table.name')" align="center">

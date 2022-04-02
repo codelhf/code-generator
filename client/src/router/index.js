@@ -46,7 +46,7 @@ export const constantRoutes = [
         path: 'home',
         name: 'Dashboard',
         component: () => import('@/views/project/generate'),
-        meta: { title: 'dashboard', icon: 'home', affix: true }
+        meta: { title: 'dashboard', icon: 'home', noCache: false, affix: true }
       }
     ]
   },
@@ -60,13 +60,13 @@ export const constantRoutes = [
         path: 'index',
         name: 'Project',
         component: () => import('@/views/project/index'),
-        meta: { title: 'project', icon: 'project', noCache: true }
+        meta: { title: 'project', icon: 'project', noCache: false }
       },
       {
         path: 'detail/:id',
         name: 'detail',
         component: () => import('@/views/project/generate'),
-        meta: { title: 'projectGenerate', icon: '' },
+        meta: { title: 'projectGenerate', icon: '', noCache: false },
         hidden: true
       }
     ]
@@ -81,13 +81,13 @@ export const constantRoutes = [
         path: 'index',
         name: 'Template',
         component: () => import('@/views/template/index'),
-        meta: { title: 'template', icon: 'template', noCache: true }
+        meta: { title: 'template', icon: 'template', noCache: false }
       },
       {
         path: 'detail/:id',
         name: 'TemplateDetail',
         component: () => import('@/views/template/detail'),
-        meta: { title: 'templateDetail', icon: '' },
+        meta: { title: 'templateDetail', icon: '', noCache: false },
         hidden: true
       }
     ]
@@ -102,7 +102,7 @@ export const constantRoutes = [
         path: 'index',
         name: 'TemplateField',
         component: () => import('@/views/template-field/index'),
-        meta: { title: 'templateField', icon: 'templateField', noCache: true }
+        meta: { title: 'templateField', icon: 'templateField', noCache: false }
       }
     ]
   },
@@ -116,7 +116,7 @@ export const constantRoutes = [
         path: 'index',
         name: 'TypeColumn',
         component: () => import('@/views/type-column/index'),
-        meta: { title: 'typeColumn', icon: 'typeColumn', noCache: true }
+        meta: { title: 'typeColumn', icon: 'typeColumn', noCache: false }
       }
     ]
   },

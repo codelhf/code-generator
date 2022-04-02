@@ -5,7 +5,6 @@
       v-loading="listLoading"
       :data="list.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
       height="100%"
-      highlight-current-row
       border="border"
     >
       <el-table-column :label="$t('projectTemplate.table.name')" align="center">
@@ -95,28 +94,28 @@
         <el-form-item :label="$t('projectTemplate.item.fileSuffix')" prop="fileSuffix">
           <el-input v-model="projectTemplate.fileSuffix" :placeholder="$t('projectTemplate.item.placeholderFileSuffix')" />
         </el-form-item>
-        <el-form-item :label="$t('projectTemplate.item.isGenerate')" prop="isGenerate">
-          <el-switch
-            v-model="projectTemplate.isGenerate"
-            :active-value="1"
-            :inactive-value="2"
-            :active-text="$t('projectTemplate.switch.activeText')"
-            :inactive-text="$t('projectTemplate.switch.inactiveText')"
-            active-color="#13ce66"
-            inactive-color="#ff4949"
-          />
-        </el-form-item>
-        <el-form-item :label="$t('projectTemplate.item.isOverride')" prop="isOverride">
-          <el-switch
-            v-model="projectTemplate.isOverride"
-            :active-value="1"
-            :inactive-value="2"
-            :active-text="$t('projectTemplate.switch.activeText')"
-            :inactive-text="$t('projectTemplate.switch.inactiveText')"
-            active-color="#13ce66"
-            inactive-color="#ff4949"
-          />
-        </el-form-item>
+        <!--<el-form-item :label="$t('projectTemplate.item.isGenerate')" prop="isGenerate">-->
+        <!--  <el-switch-->
+        <!--    v-model="projectTemplate.isGenerate"-->
+        <!--    :active-value="1"-->
+        <!--    :inactive-value="2"-->
+        <!--    :active-text="$t('projectTemplate.switch.activeText')"-->
+        <!--    :inactive-text="$t('projectTemplate.switch.inactiveText')"-->
+        <!--    active-color="#13ce66"-->
+        <!--    inactive-color="#ff4949"-->
+        <!--  />-->
+        <!--</el-form-item>-->
+        <!--<el-form-item :label="$t('projectTemplate.item.isOverride')" prop="isOverride">-->
+        <!--  <el-switch-->
+        <!--    v-model="projectTemplate.isOverride"-->
+        <!--    :active-value="1"-->
+        <!--    :inactive-value="2"-->
+        <!--    :active-text="$t('projectTemplate.switch.activeText')"-->
+        <!--    :inactive-text="$t('projectTemplate.switch.inactiveText')"-->
+        <!--    active-color="#13ce66"-->
+        <!--    inactive-color="#ff4949"-->
+        <!--  />-->
+        <!--</el-form-item>-->
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="handleFormClose('projectTemplateForm')">{{ $t('common.form.cancel') }}</el-button>
