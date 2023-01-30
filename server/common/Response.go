@@ -13,9 +13,9 @@ type Response struct {
 }
 
 const (
-	SUCCESS = 0
-	FAIL    = 1
-	ERROR   = 2
+	SUCCESS = 200
+	FAIL    = 999
+	ERROR   = 500
 )
 
 func Success(w http.ResponseWriter) {

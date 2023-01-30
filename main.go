@@ -19,7 +19,7 @@ func main() {
 	http.Handle("/", http.FileServer(http.Dir("./dist")))
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8080"
+		port = "8888"
 		log.Printf("Defaulting to port %s", port)
 	}
 	CleanUpload("./file")

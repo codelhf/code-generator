@@ -83,7 +83,7 @@
             <el-option label="GB2312" :value="'GB2312'" />
           </el-select>
         </el-form-item>
-        <el-form-item :label="$t('project.item.httpPrefix')" prop="httpPrefix">
+        <el-form-item :label="$t('project.item.httpPrefix')" prop="">
           <el-input v-model="project.httpPrefix" :placeholder="$t('project.item.placeholderHttpPrefix')" />
         </el-form-item>
         <el-form-item :label="$t('project.item.generateRemark')" prop="generateRemark">
@@ -145,7 +145,7 @@
         </el-row>
         <el-row>
           <el-col :span="10">
-            <el-form-item :label="$t('project.database.delimitKeyword')" prop="delimitKeyword">
+            <el-form-item :label="$t('project.database.delimitKeyword')" prop="">
               <el-input v-model="database.delimitKeyword" :placeholder="$t('project.database.placeholderDelimitKeyword')" />
             </el-form-item>
           </el-col>
