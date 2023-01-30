@@ -404,8 +404,8 @@ function handleForm2Close() {
 }
 
 function handleForm2Submit() {
-  databaseForm.value.validate(validate => {
-    if (validate) {
+  databaseForm.value.validate(valid => {
+    if (valid) {
       handleDbTypeUrl(database.value.type)
       if (database.value.id) {
         projectDbUpdate(database.value).then(res => {
@@ -422,15 +422,15 @@ function handleForm2Submit() {
   })
 }
 function handleDbTypeUrl(type) {
-  const database = database.value
+  const db = database.value
   if (type === 1) {
-    database.url = database.username + ':' + database.password + '@tcp(' + database.host + ':' + database.port + ')/' + database.database + '?charset=utf8'
+    db.url = db.username + ':' + db.password + '@tcp(' + db.host + ':' + db.port + ')/' + db.database + '?charset=utf8'
   } else if (type === 2) {
-    database.url = database.username + '/' + database.password + '@' + database.host + ':' + database.port + '/' + database.database + '?charset=utf8'
+    db.url = db.username + '/' + db.password + '@' + db.host + ':' + db.port + '/' + db.database + '?charset=utf8'
   } else if (type === 3) {
-    database.url = 'user=' + database.username + ' password=' + database.password + ' host=' + database.host + ' port=' + database.port + ' dbname=' + database.database + ' sslmode=disable'
+    db.url = 'user=' + db.username + ' password=' + db.password + ' host=' + db.host + ' port=' + db.port + ' dbname=' + db.database + ' sslmode=disable'
   }
-  database.value = database
+  database.value = db
 }
 </script>
 

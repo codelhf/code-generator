@@ -8,6 +8,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import NProgress from '@/utils/nprogress'
 import store from '@/store'
 import setting from '@/setting'
+import { generateTitle } from '@/i18n'
 
 NProgress.configure({ showSpinner: false })
 
@@ -72,6 +73,7 @@ router.afterEach((_to, _from) => {
 
 // 修改页面标签标题
 export function changeTitle(name) {
+  name = generateTitle(name)
   document.title = `${name}-${setting.systemTitle}`
 }
 
