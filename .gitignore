@@ -266,5 +266,5 @@ Temporary Items
 # Dependency directories (remove the comment below to include it)
 vendor/
 
-# data2
-#db/data2.db
+# dist
+dist/
