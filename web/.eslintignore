@@ -1,0 +1,13 @@
+.vscode
+.idea
+dist/
+dist-*/
+docs/
+node_modules/
+public/
+src/assets
+.eslintrc.js
+*.ttf
+*.woff
+*.md
+*.lock

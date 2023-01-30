@@ -1,0 +1,61 @@
+@import "./transition.scss";
+@import "../theme/index.scss";
+html,body {
+
+}
+a {
+  text-decoration: none;
+}
+.flex {
+  display: flex;
+}
+.center {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+/** 系统滚动条 **/
+.system-scrollbar {
+  &::-webkit-scrollbar {
+    display: none;
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: rgba(144, 147, 153, 0.3);
+  }
+  &:hover {
+    &::-webkit-scrollbar {
+      display: block;
+    }
+    &::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      background: rgba(144, 147, 153, 0.3);
+      &:hover {
+        background: rgba(144, 147, 153, 0.5);
+      }
+    }
+  }
+}
+
+/** element-plus **/
+.el-icon{
+  text-align: center;
+}
+.el-dialog__body {
+  max-height: 60vh;
+  overflow-y: auto;
+}
+.el-form--inline {
+  .el-form-item {
+    //margin-right: 0;
+    max-width: 100%;
+    .el-input,
+    .el-select,
+    .el-textarea,
+    .el-radio-group {
+      width: 100%;
+      max-width: 192px;
+    }
+  }
+}
