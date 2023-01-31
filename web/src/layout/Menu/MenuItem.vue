@@ -2,11 +2,11 @@
   <template v-if="!menu.hidden">
     <router-link
       v-if="!menu.children"
-      :key="menu.path"
-      :to="menu.path"
+      :key="resolveFullPath(menu)"
+      :to="resolveFullPath(menu)"
       @click="hideMenu"
     >
-      <el-menu-item :index="menu.name || menu.path">
+      <el-menu-item :index="resolveFullPath(menu)">
         <template #title>
           <component v-if="menu.meta && menu.meta.icon" :is="useRenderIcon(menu.meta.icon, 'svg')" />
           <span>{{ generateTitle(menu.meta && menu.meta.title) }}</span>
@@ -15,23 +15,23 @@
     </router-link>
     <router-link
       v-else-if="hasOneShowingChildren(menu.children) && !menu.children[0].children && !menu.alwaysShow"
-      :key="menu.children[0].path"
-      :to="menu.path === '/' ? '/' + menu.children[0].path : menu.path + '/' + menu.children[0].path"
+      :key="resolveFullPath(menu)"
+      :to="resolveFullPath(menu)"
       @click="hideMenu"
     >
-      <el-menu-item :index="menu.path + '/' + menu.children[0].path">
+      <el-menu-item :index="resolveFullPath(menu)">
         <template #title>
           <component v-if="menu.meta && menu.meta.icon" :is="useRenderIcon(menu.meta.icon, 'svg')" />
           <span>{{ generateTitle(menu.meta && menu.meta.title) }}</span>
         </template>
       </el-menu-item>
     </router-link>
-    <el-sub-menu v-else :index="menu.name || menu.path">
+    <el-sub-menu v-else :index="resolveFullPath(menu)">
       <template #title>
         <component v-if="menu.meta && menu.meta.icon" :is="useRenderIcon(menu.meta.icon, 'svg')" />
         <span>{{ generateTitle(menu.meta && menu.meta.title) }}</span>
       </template>
-      <menu-item v-for="item in menu.children" :key="item.path" :menu="item" :is-nest="true" />
+      <menu-item v-for="item in menu.children" :key="item.path" :menu="item" :base-path="resolveFullPath(menu)" />
     </el-sub-menu>
   </template>
 </template>
@@ -47,12 +47,12 @@ export default defineComponent({
       type: Object,
       required: true
     },
-    isNest: {
-      type: Boolean,
-      default: false
+    basePath: {
+      type: String,
+      default: ''
     }
   },
-  setup() {
+  setup(props, ctx) {
     const store = useStore()
     const isCollapse = computed(() => store.state.app.isCollapse)
     const hideMenu = () => {
@@ -65,15 +65,34 @@ export default defineComponent({
       if (!children) {
         return false
       }
-      const showingChildren = children.filter(item => {
-        return !item.hidden
-      })
+      const showingChildren = children.filter(item => !item.hidden)
       return showingChildren.length === 1
+    }
+    // 处理多级路由
+    function resolveFullPath(menu) {
+      let path = ''
+      if (!menu.children) {
+        path = menu.path
+      } else if (hasOneShowingChildren(menu.children) && !menu.children[0].children && !menu.alwaysShow) {
+        const showingChildren = menu.children.filter(item => !item.hidden)
+        path = menu.path === '/' ? '/' + showingChildren[0].path : menu.path + '/' + showingChildren[0].path
+      } else {
+        path = menu.path
+      }
+      if (props.basePath) {
+        if (props.basePath === '/') {
+          path = '/' + path
+        } else {
+          path = props.basePath + '/' + path
+        }
+      }
+      return path
     }
     return {
       hideMenu,
       generateTitle,
-      hasOneShowingChildren
+      hasOneShowingChildren,
+      resolveFullPath
     }
   }
 })
