@@ -17,6 +17,7 @@
       <!--template-->
       <div style="width: 100%; height: calc((100% - 70px) / 2);">
         <el-table
+          ref="templateListDom"
           :key="tableKey"
           v-loading="listLoading"
           :data="list.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
@@ -97,7 +98,7 @@
       </el-form>
       <!--result-->
       <div style="width: 100%; height: calc((100% - 70px) / 2);">
-        <el-input v-model="generateResult" type="textarea" :autosize="{ minRows: 16 }" />
+        <el-input type="textarea" v-model="generateResult" />
       </div>
 
       <!-- templateDetail -->
@@ -174,6 +175,7 @@ onMounted(() => {
   if (route.params.id) {
     projectId.value = route.params.id
     getTableList()
+    getList()
   } else {
     projectLastId().then(res => {
       if (!res.data) {
@@ -181,9 +183,9 @@ onMounted(() => {
       }
       projectId.value = res.data
       getTableList()
+      getList()
     })
   }
-  getList()
   getGroupList()
   getTemplateList()
 })
@@ -226,7 +228,7 @@ function handleGenerate() {
     ElMessage.warning($t('projectGenerate.button.tableWarning'))
     return
   }
-  const templateList = templateListDom.list
+  const templateList = templateListDom.value.data
   if (templateList.length === 0) {
     ElMessage.warning($t('projectGenerate.button.templateWarning'))
     return
@@ -388,6 +390,14 @@ function handleDelete(id) {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+::v-deep {
+  .el-textarea {
+    height: 100%;
 
+    .el-textarea__inner {
+      height: 100%;
+    }
+  }
+}
 </style>
